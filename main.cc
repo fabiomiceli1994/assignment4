@@ -24,11 +24,11 @@ Vector solve(const Model &model, const DIRK &scheme, double tau)
   return y;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
   // read parameters as command line arguments
-  int N = *argv[0];
-  double kappa = *argv[1];
+  int N = atoi(argv[1]);
+  double kappa = atof(argv[2]);
   HeatEquation model(N, kappa);
   FE scheme;
   double tau = 1e-6;

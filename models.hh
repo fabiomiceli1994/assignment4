@@ -13,7 +13,7 @@ public:
   Vector f(double t,const Vector &y) const
   {
     SparseMatrix A = SparseMatrix(N);
-    double h = 1/(N + 1);
+    double h = 1./(N + 1);
     double UD = kappa/(h*h);
     double D = -2*kappa/(h*h);
     double LD = kappa/(h*h);
@@ -64,6 +64,7 @@ public:
     //   }
     // }
     return A;
+
   }
 
   double T() const
@@ -73,11 +74,11 @@ public:
 
   Vector y0() const
   {
-    double h = 1/((*this).N + 1);
-    Vector v((*this).N,1);
+    double h = 1./((*this).N + 1);
+    Vector v((*this).N); //+2 due to the boundary conditions
     for (int i = 0; i < (*this).N; ++i)
     {
-      if (i*h >= 0.25 && i*h < 0.75)
+      if (i*h > 0.25 && i*h <= 0.75)
       {
         v[i] = 1;
       }
