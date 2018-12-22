@@ -1,11 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
+#include <vector>
+#include <string>
 
 #include "models.hh"
 #include "schemes.hh"
-#include "vector.hh"
-#include "sparse.hh"
 
 template <class Model>
 Vector solve(const Model &model, const DIRK &scheme, double tau)
@@ -24,15 +27,14 @@ Vector solve(const Model &model, const DIRK &scheme, double tau)
 int main(int argc, char* argv[])
 {
   // read parameters as command line arguments
-
-  unsigned N = arg[0];
-  unsigned kappa = 1.; 
-
+  int N = *argv[0];
+  double kappa = *argv[1];
   HeatEquation model(N, kappa);
   FE scheme;
+  double tau = 1e-6;
 
   // example invocation of solver
-  solve(model,*scheme,tau).toFile("out.dat");
+  solve(model,scheme,tau).toFile("out.dat");
 
   return 0;
 }

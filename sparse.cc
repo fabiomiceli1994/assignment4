@@ -1,6 +1,8 @@
 #include <cassert>
 
+#include "vector.hh"
 #include "sparse.hh"
+#include "models.hh"
 
 int SparseMatrix::findEntry(int i, int j) const {
   for ( int k = 0; k<index_[i].size(); ++k ) {
@@ -109,7 +111,7 @@ Vector SparseMatrix::ConjugateGradient(const Vector& b, const Vector& x0, double
 	x = x + p*alpha;
 
 	r = b - A*x;
-  
+
 	const double beta = -(A*p*r)/App;
 	p = r + p*beta;
 	if ( (iter % 10) == 0 ) {

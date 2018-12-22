@@ -3,6 +3,8 @@
 #include <fstream>
 
 #include "vector.hh"
+#include "sparse.hh"
+#include "models.hh"
 
 std::ostream& operator<<(std::ostream& s, const Vector& v) {
   for (double l : v ) {
@@ -49,7 +51,7 @@ Vector Vector::operator+(const Vector& other) const {
 Vector& Vector::operator+=(const Vector& other) {
   for ( int i=0; i<size(); ++i ) {
 	(*this)[i] += other[i];
-  }  
+  }
   return *this;
 }
 
@@ -81,7 +83,8 @@ void Vector::toFile(const std::string& filename, double L) {
   std::ofstream file;
   file.open(filename);
   for ( int i = 0; i<size(); ++i ) {
-	file << ((double) i)/size()*L << " " << (*this)[i] << std::endl;
+  file.width(20);
+	file << std::left << ((double) i)/size()*L << " " << (*this)[i] << std::endl;
   }
   file.close();
 }

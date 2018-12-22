@@ -36,44 +36,37 @@ public:
   // - model.df(t,y)
   // - model.N
   template <class Model>
-  Vector evolve(const Vector &y, double t, double h, const Model &model) const //h stands for tau
+  Vector evolve(const Vector &y, double t, double h, const Model &model) const // h  = tau here
   {
     Vector ret = y;
-    std::vector<Vector> k(stages_, Vector(model.N)); //taking number of stages and number of points in the interior of the interval
-
-
-	  for (int s=0; s<stages_; ++s ) {
-	  // compute k_s and store inside k[s]
-
-      Vector temp_sum = y;
-      for(int j=0; j<s; ++j)
-      {
-        temp_sum += h*a(s,j)*k[j];
-      }
-	    if (a(s,s) != 0)
-      {
-		  // implicit case
-        int iter = 0; // iter is the counter which allows to stop the while after a certain number of iterations
-
-        double error = maxNorm( model.f(t+ h*c[s], temp_sum + h*a(s,s)*k[s]) - k[s] );
-        SparseMatrix Jac = model.df(t+h*c[s], temp_sum+h*a(s,s)*k[s]);
-        while( iter<1e6 && std::abs(error)>1e-6 )
+    std::vector<Vector> k(stages_, Vector(model.N));
+	   for (int s=0; s<stages_; ++s )
+     {
+	      // compute k_s and store inside k[s]
+        Vector temp_sum = y;
+        for (int j = 0; j < s; ++j)
         {
-            k[s] = Jac.GaussSeidel(-model.f(t+h*c[s], temp_sum+h*a(s,s)*k[s]), k[s], 1e-6, 1e6) + k[s];
-            double error = maxNorm( model.f(t+ h*c[s], temp_sum + h*a(s,s)*k[s]) - k[s] );
-            iter ++;
+          temp_sum += h*a(s,j)*k[j];
         }
-        tmp_sum += h*a(s,s)*k[s];
+	       if (a(s,s) != 0)
+         {
+            int iter = 0; // iter is the counter which will allow us to stop the while loop after a certain number of iterations
+                         // if the condition std:::abs(error) < 1e-6 is not met
+            double error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]).maxNorm();
+            SparseMatrix Jac = model.df(t + h*c_[s], temp_sum + h*a(s,s)*k[s]);
+            while (iter < 1e6 && std::abs(error) > 1e-6)
+            {
+              k[s] = Jac.GaussSeidel((-1)*model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]),k[s], 1e-6, 1e6) + k[s];
+              error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]).maxNorm();
+              iter++;
+            }
+            temp_sum += h*a(s,s)*k[s];
+	       }
+         k[s] = model.f(t + c_[s]*h, temp_sum);
+	  // Increment the return value by the current k[s]
+	       ret += h*b_[s]*k[s];
 	    }
-
-      k[s]=model.f(t + c[s]*h, temp_sum);
-
-	    // Increment the return value by the current k[s]
-	    ret += h*b_[s]*k[s];
-
-    } //end of for loop
-
-     return ret;
+    return ret;
   }
 
 protected:
