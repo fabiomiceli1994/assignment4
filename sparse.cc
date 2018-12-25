@@ -68,7 +68,7 @@ Vector SparseMatrix::GaussSeidel(const Vector& b, const Vector& x0, double toler
 	}
 	if ( (iter % 100) == 0 ) {
 	  const double resi = (b - A*x).maxNorm();
-	  std::cout << "Iteration " << iter << ": residual=" << resi << std::endl;
+	  // std::cout << "Iteration " << iter << ": residual=" << resi << std::endl;
 	  if ( resi < tolerance ) {
 		return x;
 	  }

@@ -29,12 +29,19 @@ int main(int argc, char** argv)
   // read parameters as command line arguments
   int N = atoi(argv[1]);
   double kappa = atof(argv[2]);
+  int schemeNumber = atof(argv[3]);
+
   HeatEquation model(N, kappa);
-  FE scheme;
+
+  std::vector<DIRK *> schemes; // Vector of schemes
+  schemes.push_back(new FE());
+  schemes.push_back(new BE());
+  schemes.push_back(new Heun3());
+
   double tau = 1e-6;
 
   // example invocation of solver
-  solve(model,scheme,tau).toFile("out.dat");
+  solve(model,*schemes[schemeNumber],tau).toFile("HE_kappa_" + std::to_string(kappa) + "_N_" + std::to_string(N) + "_scheme_" + std::to_string(schemeNumber) + ".dat");
 
   return 0;
 }

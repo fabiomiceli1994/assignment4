@@ -1,0 +1,8 @@
+set terminal pdf
+set output "HE_plot_FE.pdf"
+
+set key reverse Left outside
+set grid
+
+plot "HE_kappa_0.001000_N_16_scheme_0.dat" using 1:2 with l title "kappa = 0.001", \
+     "HE_kappa_1.000000_N_16_scheme_0.dat" using 1:2 with l title "kappa = 1"

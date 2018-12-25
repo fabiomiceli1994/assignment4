@@ -48,23 +48,23 @@ public:
         {
           temp_sum += h*a(s,j)*k[j];
         }
-	       if (a(s,s) != 0)
-         {
-            int iter = 0; // iter is the counter which will allow us to stop the while loop after a certain number of iterations
-                         // if the condition std:::abs(error) < 1e-6 is not met
-            double error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]).maxNorm();
-            SparseMatrix Jac = model.df(t + h*c_[s], temp_sum + h*a(s,s)*k[s]);
-            while (iter < 1e6 && std::abs(error) > 1e-6)
-            {
-              k[s] = Jac.GaussSeidel((-1)*model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]),k[s], 1e-6, 1e6) + k[s];
-              error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]).maxNorm();
-              iter++;
-            }
-            temp_sum += h*a(s,s)*k[s];
-	       }
-         k[s] = model.f(t + c_[s]*h, temp_sum);
-	  // Increment the return value by the current k[s]
-	       ret += h*b_[s]*k[s];
+	      if (a(s,s) != 0)
+        {
+          int iter = 0; // iter is the counter which will allow us to stop the while loop after a certain number of iterations
+                        // if the condition std:::abs(error) < 1e-6 is not met
+          double error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]).maxNorm();
+          SparseMatrix Jac = model.df(t + h*c_[s], temp_sum + h*a(s,s)*k[s]);
+          while (iter < 1e6 && std::abs(error) > 1e-6)
+          {
+            k[s] = Jac.GaussSeidel((-1)*model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]), k[s], 1e-6, 1e6) + k[s];
+            error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]).maxNorm();
+            iter++;
+          }
+          temp_sum += h*a(s,s)*k[s];
+	      }
+        k[s] = model.f(t + c_[s]*h, temp_sum);
+	      // Increment the return value by the current k[s]
+	      ret += h*b_[s]*k[s];
 	    }
     return ret;
   }
@@ -79,7 +79,7 @@ protected:
   std::vector<double> a_,b_,c_;
 };
 
-
+// FE: derivied class for the forward Euler method
 class FE: public DIRK
 {
 public:
@@ -90,6 +90,41 @@ public:
 	b_[0] = 1.;
 	c_[0] = 0.;
   }
+
 };
+
+// BE: derived class for the backward Euler method
+class BE: public DIRK
+{
+public:
+
+  BE() : DIRK(1)
+  {
+	a(0,0) = 1.;
+	b_[0] = 1.;
+	c_[0] = 1.;
+  }
+
+};
+
+// Heun3: derived class for the Heun3 method
+class Heun3: public DIRK
+{
+public:
+
+  Heun3() : DIRK(3)
+  {
+	a(1,0) = 1./3;
+  a(2,1) = 2./3;
+	b_[0] = 0.25;
+  b_[1] = 0.;
+  b_[2] = 0.75;
+	c_[0] = 0;
+  c_[1] = 1./3;
+  c_[2] = 2./3;
+  }
+
+};
+
 
 #endif
