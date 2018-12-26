@@ -18,7 +18,7 @@ as well and in case a wrong insertion happens, a suitable usage-message is
 printed on the terminal for the user.
 Every time the program is run, the arguments have to be inserted in following
 order after the "./MyProgram" instruction:
-"Nx" "kappa" "tau"
+"Nx" "kappa" "scheme"
 In particular:
 - to test with FE insert 0;
 - to test with BE insert 1;
