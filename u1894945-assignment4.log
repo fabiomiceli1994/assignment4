@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6840) (preloaded format=pdflatex 2018.10.23)  26 DEC 2018 12:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6840) (preloaded format=pdflatex 2018.10.23)  26 DEC 2018 13:51
 entering extended mode
 **./u1894945-assignment4.tex
 (u1894945-assignment4.tex
@@ -1126,108 +1126,94 @@ Underfull \hbox (badness 10000) in paragraph at lines 125--127
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 129--130
+Underfull \hbox (badness 10000) in paragraph at lines 128--129
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 131--134
+Underfull \hbox (badness 10000) in paragraph at lines 130--133
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 135--136
+Underfull \hbox (badness 10000) in paragraph at lines 134--135
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 147--150
+Underfull \hbox (badness 10000) in paragraph at lines 146--149
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 153--155
+Underfull \hbox (badness 10000) in paragraph at lines 152--154
 
  []
 
 [2
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 157--158
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 162--166
+Underfull \hbox (badness 10000) in paragraph at lines 156--157
 
  []
 
 [3] [4]
-Underfull \hbox (badness 10000) in paragraph at lines 300--302
+Underfull \hbox (badness 10000) in paragraph at lines 295--297
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 307--309
+Underfull \hbox (badness 10000) in paragraph at lines 302--304
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 305--306
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 307--308
 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 310--311
-
- []
-
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-Underfull \hbox (badness 10000) in paragraph at lines 324--326
+Underfull \hbox (badness 10000) in paragraph at lines 332--334
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 327--328
+Underfull \hbox (badness 10000) in paragraph at lines 335--336
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 337--339
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 340--341
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 342--344
+Underfull \hbox (badness 10000) in paragraph at lines 345--347
 
  []
 
 [6]
-Underfull \hbox (badness 10000) in paragraph at lines 349--350
+Underfull \hbox (badness 10000) in paragraph at lines 348--349
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 351--353
+Underfull \hbox (badness 10000) in paragraph at lines 350--352
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 354--355
+Underfull \hbox (badness 10000) in paragraph at lines 357--358
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 356--358
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 360--361
+Underfull \hbox (badness 10000) in paragraph at lines 359--361
 
  []
 
@@ -1242,59 +1228,79 @@ Underfull \hbox (badness 10000) in paragraph at lines 364--366
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 367--368
+Underfull \hbox (badness 10000) in paragraph at lines 368--369
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 369--370
+Underfull \hbox (badness 10000) in paragraph at lines 370--371
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 371--372
+Underfull \hbox (badness 10000) in paragraph at lines 372--373
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 374--375
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 376--377
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 378--379
 
  []
 
 [7]
-Underfull \hbox (badness 10000) in paragraph at lines 375--376
+Underfull \hbox (badness 10000) in paragraph at lines 380--381
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 377--378
+Underfull \hbox (badness 10000) in paragraph at lines 382--383
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 380--384
+Underfull \hbox (badness 10000) in paragraph at lines 384--385
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 386--388
+Underfull \hbox (badness 10000) in paragraph at lines 387--391
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 393--394
 
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 389.
+(hyperref)                removing `math shift' on input line 395.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 389.
+(hyperref)                removing `subscript' on input line 395.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 389.
+(hyperref)                removing `math shift' on input line 395.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 390--392
+Underfull \hbox (badness 10000) in paragraph at lines 396--398
 
  []
 
 [8]
-LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 418
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 424
 .
  (/usr/local/share/miktex-texmf/tex/latex/base/ts1cmtt.fd
 File: ts1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
@@ -1304,48 +1310,48 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-Underfull \hbox (badness 10000) in paragraph at lines 421--422
+Underfull \hbox (badness 10000) in paragraph at lines 427--428
 
  []
 
 [9]
-Underfull \hbox (badness 10000) in paragraph at lines 452--453
+Underfull \hbox (badness 10000) in paragraph at lines 458--459
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 462--464
+Underfull \hbox (badness 10000) in paragraph at lines 468--470
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 465--466
+Underfull \hbox (badness 10000) in paragraph at lines 471--472
 
  []
 
 [10]
 No file u1894945-assignment4.ind.
 (u1894945-assignment4.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 488.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 494.
  [11
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 488.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 494.
  (u1894945-assignment4.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 488.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 488.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 494.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 494.
 Package rerunfilecheck Info: File `u1894945-assignment4.out' has not changed.
 (rerunfilecheck)             Checksum: DAD8221AB8E2C287375751FC6FF9B2C7;1194.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 488.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 494.
  ) 
 Here is how much of TeX's memory you used:
- 11804 strings out of 492971
- 172602 string characters out of 3135072
- 504077 words of memory out of 3000000
- 15296 multiletter control sequences out of 15000+200000
- 19741 words of font info for 113 fonts, out of 3000000 for 9000
+ 11829 strings out of 492971
+ 172864 string characters out of 3135072
+ 513077 words of memory out of 3000000
+ 15311 multiletter control sequences out of 15000+200000
+ 19906 words of font info for 114 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 33i,16n,58p,753b,1832s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 33i,16n,58p,754b,1307s stack positions out of 5000i,500n,10000p,200000b,50000s
  </home/masdoc/.miktex/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tctt100
 0.pk></usr/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
 /usr/local/share/miktex-texmf/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/l
@@ -1365,9 +1371,9 @@ iktex-texmf/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/share/miktex-t
 exmf/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/share/miktex-texmf/f
 onts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/share/miktex-texmf/fonts/t
 ype1/public/amsfonts/symbols/msbm10.pfb>
-Output written on u1894945-assignment4.pdf (11 pages, 281290 bytes).
+Output written on u1894945-assignment4.pdf (11 pages, 284128 bytes).
 PDF statistics:
- 281 PDF objects out of 1000 (max. 8388607)
- 60 named destinations out of 1000 (max. 500000)
+ 290 PDF objects out of 1000 (max. 8388607)
+ 68 named destinations out of 1000 (max. 500000)
  19081 words of extra memory for PDF output out of 20736 (max. 10000000)
 

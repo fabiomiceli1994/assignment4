@@ -110,7 +110,7 @@ Student Number: 1894945
 
 \section{Introduction}
 Intuitively, (Parabolic) Initial-Boundary Value Problems (IVBPs) combine an initial value problem in a distinguished “time-like” direction with a boundary value
-problem in “space-like” directions. In this assignment the approximation of solutions to them for scalar parabolic differential equations (PDEs) will be considered.
+problem in “space-like” directions. In this assignment, the approximation of solutions to IVBPs for scalar parabolic differential equations (PDEs) will be considered.
 
 \begin{definition}
 	\label{def:IVBP}
@@ -125,14 +125,13 @@ problem in “space-like” directions. In this assignment the approximation of 
 	\end{align} 
 	with data $f(\mathbf{x},t):\Omega\times I\to\mathbb{R}$, $v(\mathbf{x},t):\partial\Omega\times I\to\mathbb{R}$, $u_0(\mathbf{x}):\Omega\to\mathbb{R}$. Eqn.\eqref{eqn:IVBP} is a parabolic partial differential equation (PDE).\\
 \end{definition}
-
-In general, in the spatial direction, one wants the operator $\mathcal{L}$ to be uniformly elliptic in order for the whole problem to be parabolic .\\
+Generally speaking, one wants the operator $\mathcal{L}$ to be uniformly elliptic in the spatial direction for the whole problem to be parabolic .\\
 
 While well posedness for ODEs is satisfactorily answered in a generic way with the Picard-Lindelöf theorem, the same is not true for PDEs, not even linear ones. Often,
 existence and uniqueness are established on a case-by-case basis, and in many cases is not known at all (for example famously for the Navier-Stokes equation describing the motion of incompressible fluids). Nevertheless, there is huge interest from an applications perspective to obtain numerical solutions to PDE problems relevant to physics and
-engineering. General PDE theory will not be presented here. Instead, methods to combine known methods for IVPs and BVPs to solve problems of the type of problem \ref{def:IVBP} will be discussed. Clearly, the idea is to discretise the spatial direction by replacing $\mathcal{L}$ with an appropriate $\mathcal{L}_h$, and additionally using one of the time integration schemes introduced above to treat the time evolution.\\
+engineering. General PDE theory will not be presented here. Instead, methods to combine known methods for IVPs and BVPs to solve problems of the type of problem \ref{def:IVBP} will be discussed. Clearly, the idea is to discretise the spatial direction by replacing $\mathcal{L}$ with an appropriate discretised operator $\mathcal{L}_h$ and using one of the time integration schemes introduced above to treat the time evolution.\\
 
-The following simple problem represents the benchmark problem for testing numerical schemes for IVBP in the present assignment.\\
+The following simple IVBP represents the benchmark problem for testing numerical schemes for IVBPs in the present assignment.\\
 
 \begin{definition}
 	\label{def:Heat}
@@ -151,19 +150,17 @@ The following simple problem represents the benchmark problem for testing numeri
 
 \subsection{Numerical methods to approximate solution to IBVPs}
 Two different approaches to finding numerical solution to IBVPs can be adopted. The first one results in the so-called \emph{semi-discretisation schemes}, in which a generic IBVP is first discretised in space and then in time or viceversa. Alternatively, a simultaneous discretisation, leading to a \emph{fully discretised scheme}, can be performed.\\
-A detailed presentation of \emph{fully-discretised schemes}, which will not be covered here, can be found in Ref.\cite{numerical-math}. In the present report it will only be pointed out that, although a fully-discretised approach appears to be more convenient, in the case of stiff problems approximated by means of method characterised by a bounded region of absolute stability, the choice of the discretisation time step and of the mesh size cannot be done arbitrarily, since the two are related by the Courant-Friedrichs-Levy conditions (see Ref.\cite{numerical-math}).\\
+A detailed presentation of \emph{fully-discretised schemes} can be found in Ref.\cite{numerical-math}. In the present report it will only be pointed out that, although a fully-discretised approach appears to be more convenient, in the case of stiff problems approximated by means of a method characterised by a bounded region of absolute stability, the choice of the discretisation time step and of the mesh size cannot be done arbitrarily, since the two are related by the Courant-Friedrichs-Levy conditions (see \cite{numerical-math}).\\
 
 \subsubsection{Method of lines}
-In the present assignment only one of two possible approaches to semi-discretistion will be presented. A more general discussion of them can again be found in Ref.\cite{numerical-math} and Ref.\cite{lec-notes}. In particular, only the so called \emph{method of lines} will be presented.\\
+In the present assignment only one of two possible semi-discretisation approaches will be presented. A more general discussion of them can again be found in Ref.\cite{numerical-math} and Ref.\cite{lec-notes}. In particular, only the so called \emph{method of lines} will be presented.\\
 
 Let $ N_x $ and $ N_t $ denote the number of spatial and temporal discretisation points respectively. Also let $ (x_i)_{i=0}^{N_x + 1} $ be a set of points, that discretise $ \Omega = [0,L] $. One has:
 \begin{align*}
 0 = x_0 < x_1 < \cdots < x_{N_x} < x_{N_x + 1} = L
 \end{align*}
-Define $ I_k := [x_{k},x_{k+1}] $, with $ |I_k| := h $, for $ k = 0,\ldots,N_x $ (h $\in  \mathbb{R}^+$  is the spatial mesh size). Finally, denote by $ u_i : I \to \mathbb{R}$ the approximation of the exact solution $ u $ at $ x_i $ for $ i = 1,\ldots,N_x $.
-\\\\
-We begin the method of lines discertisation by first discretising the spatial direction with second order central finite differences to obtain an initial value problem, that is for $ i = 1,\ldots,N_x $
-
+Define $ I_k := [x_{k},x_{k+1}] $, with $ |I_k| := h $, for $ k = 0,\ldots,N_x $. The variable h $\in  \mathbb{R}^+$  is the spatial mesh size. Finally, denote by $ u_i : I \to \mathbb{R}$ the approximation of the exact solution $ u $ at $ x_i $ for $ i = 1,\ldots,N_x $.
+\\
 The method of lines takes the position of first discretising in space. Such a discretisation is here performed through second order central finite differences. In the case of Eqn.\eqref{def:Heat}, the resulting problem becomes a system of ordinary differential equations of the form:
 
 \begin{align*}
@@ -202,10 +199,10 @@ To complete the discretisation a solver for ODEs has to be applied to the system
 
 $$0 = t_0 < t_1 < \cdots < t_{N_t} < t_{N_t + 1} = T$$
 
-where $|J_k| = | [t_{k},t_{k+1}] | := \tau\in\mathbb{R}^+$ is the temporal step size, for $ k = 0,\ldots,N_t $. Moreover, denote by $ \mathbf{u}^{l} $ the approximation of the exact solution of the IVP for $ \mathbf{u} $ at $ t_i $ for $ i = 1,\ldots,N_t $.
+where $|J_k| = | [t_{k},t_{k+1}] | := \tau\in\mathbb{R}^+$ is the temporal step size, for $ k = 0,\ldots,N_t $. Moreover, denote by $ \mathbf{u}^{i} $ the approximation of the exact solution of the IVP for $ \mathbf{u} $ at $ t_i $ for $ i = 1,\ldots,N_t $.
 
 \subsection{The present case}
-In the present assignment Eqn.\eqref{def:Heat} is defined for $L=1$, $T=0.1$, $f\equiv 0$, PBCs and the following initial condition:
+In the present assignment we aim to solve Eqn.\eqref{def:Heat} in the case of $L=1$, $T=0.1$, $f\equiv 0$, PBCs and the following initial condition:
 
 \begin{align}
 \label{eqn:init-cond}
@@ -216,16 +213,14 @@ u_0(x)=
 \end{cases}
 \end{align}
 
-System of equations \eqref{eqn:lines} will be solved by means of Runge-Kutta (RK) methods.\\
-The implementation of such methods for the present problem will be now discussed. Set $ f(t_i,\mathbf{U}^i) = f_i $. An s-stage RK method for system \eqref{Eq:IVP from Method of Lines} takes the form:
-for the IVP \eqref{Eq:IVP from Method of Lines} is of the form:
+System of equations \eqref{eqn:lines} will be solved by means of Runge-Kutta (RK) methods. The implementation of such methods for the present problem will be now discussed. Set $ f(t_i,\mathbf{u}^i) = f_i $. An s-stage RK method for system \eqref{Eq:IVP from Method of Lines} takes the form:
 \begin{align*}
-\mathbf{u}^{n+1} = \mathbf{u}^{n} + \tau \mathbf{F}(t_n, \mathbf{u}^n, f, \tau),
+\mathbf{u}^{n+1} = \mathbf{u}^{n} + \tau \mathbf{F}(t_n, \mathbf{u}^n, f, \tau)
 \end{align*}
 where the increment function $ F $ is defined as
 \begin{align*}
 \mathbf{F}(t_n, \mathbf{u}^n, f, \tau) &= \sum_{i=1}^{s}b_i\mathbf{K}_i \\
-\mathbf{K}_i &= f\left(t_n + c_i\tau, \mathbf{u}^n + \tau\sum_{j=1}^{s}a_{ij}\mathbf{K}_j\right), \quad \text{for } i \in \{1,\ldots,s\},
+\mathbf{K}_i &= f\left(t_n + c_i\tau, \mathbf{u}^n + \tau\sum_{j=1}^{s}a_{ij}\mathbf{K}_j\right), \quad \text{for } i \in \{1,\ldots,s\}
 \end{align*}
 and $ A = (a_{ij}) \in \mathbb{R}^{s \times s} $, $ \mathbf{b}, \mathbf{c} \in \mathbb{R}^s $ completely determine the Runge-Kutta method.\\
 As it is well known, a specific Runge-Kutta method can be denoted by its \emph{Butcher tableau}, which takes the following form:
@@ -283,8 +278,8 @@ The forward Euler method, the backward Euler method and the 3-stage Heun method 
 	\end{minipage}
 \end{center}
 
-It should now be clear that the numerical implementation of the code is a combination of the techniques proposed for the previous assignments and, in particular, extends the code used in Assignment 3 to the ``vectorial case".\\
-It is worth pointing out how such an extension takes place in the case of implicit RK methods, i.e RK methods where at each stage $ K_i $, for a specific $ i \leq s $, is determined by solving the implicit equation:
+It should now be clear that the numerical implementation of the code is a combination of the techniques proposed for the previous assignments and, in particular, extends the code used in Assignment 3 to a ``vectorial case".\\
+It is worth pointing out how such an extension takes place in the case of implicit RK methods, i.e RK methods where at each stage $ K_i $, for a specific $ i \leq s $, $s\in\mathbb{N}$ is determined by solving the implicit equation:
 
 \begin{align}
 \label{eqn:K_i}
@@ -298,20 +293,33 @@ $\mathbf{K}_i $, which is the root of $g$, is approximated through the following
 \begin{align*}
 \mathbf{K}_i^{k+1} = \mathbf{K}_i^{k} - (g(\mathbf{K}_{i}^{k}))^{-1}g(\mathbf{K}_{i}^{k}),
 \end{align*}
-$ \mathbf{K}_i^k $ being the $ k $th iteration of the approximation of $ \mathbf{K}_i $. We note that to perform the inversion $ (g(\mathbf{K}_{i}^{k}))^{-1} $ numerical inversion techniques have to be used.\\
+$ \mathbf{K}_i^k $ being the $ k $th iteration of the approximation of $ \mathbf{K}_i $. We note that to perform the inversion of $ (g(\mathbf{K}_{i}^{k}))^{-1} $, numerical inversion techniques have to be used.\\
 
 
 
 \section{The program}
 \subsection{Implementation}
 The program is built on the classes and struct that can be found in the files \emph{vector.hh}, \emph{vector.cc}, \emph{sparse.hh}, \emph{sparse.cc}, \emph{models.hh} and \emph{schemes.hh}.\\
-In the \emph{vector}-files the class \emph{Vector}, which generalises the \emph{std::vector} class is built. The \emph{SparseMatrix} class construction can be found in the \emph{sparse}-files instead. Being that such files have been provided along with the assignment instructions and that their content was studied for the lessons and for Assignment1 and Assignment 2, no discussion of them will be here reported. However, it is worth pointing out that a slight modification of the function \emph{Vector::toFile}, provided in the \emph{vector}-files has been performed. Such a modification, which is reported for clarity in the following, eases the printing of the solution to the chosen file.\\
+In the \emph{vector}-files the class \emph{Vector}, which generalises the \emph{std::vector} class is built. The \emph{SparseMatrix} class construction can be found in the \emph{sparse}-files instead. Being that such files have been provided along with the assignment instructions and that their content was studied for the lessons and for Assignment 1 and Assignment 2, no discussion of them will be here reported. However, it is worth pointing out that a slight modification of the function \emph{Vector::toFile}, provided in the \emph{vector}-files has been performed. Such a modification, which is reported for clarity in the following, eases the printing of the solution to the chosen file.\\
 
 AGGIUNGERE LST CON MODIFICA E COMMENTO A TOFILe\\
 
+Also, in order to reduce the amount of lines printed on the terminal, one line has been commented out from the \emph{ConjugateGradient} function contained in \emph{sparse.cc}. For clarity reasons, such a line is explicitly reported in this report.\\
+
+\begin{lstlisting}
+if ( (iter % 100) == 0 ) {
+	const double resi = (b - A*x).maxNorm();
+	// std::cout << "Iteration " << iter << ": residual=" 	<< resi << std::endl;
+	if ( resi < tolerance ) {
+		return x;
+	}
+}
+\end{lstlisting}
+
+
 \subsubsection{schemes.hh file}
 \label{subsubsec:schemes}
-The class DIRK is made of 4 \emph{protected} variables: the matrix $A$, the vector $b$, the vector $c$ and the integer $s$ (named stages$\_$ in the code), which fully characterise the Butcher tableau of any RK method. This is done through the following instructions, which can be found in the schemes.hh file:
+The class DIRK is made of 4 \emph{protected} variables: the matrix $A$, the vector $b$, the vector $c$ and the integer $s$ (named stages$\_$ in the code), which fully characterise the Butcher tableau of any RK method. The following instructions, defining the \emph{private} variables of the class, can be found in the schemes.hh file:
 
 \begin{lstlisting}
 protected:
@@ -321,13 +329,13 @@ protected:
 	std::vector<double> a_,b_,c_;
 \end{lstlisting}
 
-It may be worth pointing out that, even though \emph{a$\_$} represents a matrix, it is implemented as a vector in the program.\\
+It may be worth pointing out that, even though \emph{a$\_$} represents a matrix, such a variable is implemented as a vector in the program.\\
 The classes $FE$ (Forward Euler), $BE$ (Backward Euler) and $Heun3$ (3-stage Heun) are implemented as derived classes of $DIRK$.\\
 
 AGGIUNGERE CLASSI IN LST\\
 
 
-The function \emph{evolve}, which returns the evolved approximated solution $\mathbf{u}^{n+1}$, i.e. it evolves the solution to time $t+\tau$ from time $t$, can be found in the file as well. For flexibility reasons, the function is built as a \emph{template}: in this way, both methods can be accessed by the function. The prototype of the routine, is displayed in the following:
+The function \emph{evolve}, which returns the evolved approximated solution $\mathbf{u}^{n+1}$ starting from $\mathbf{u}^n$, i.e. it evolves the solution to time $t+\tau$ from time $t$, can be found in the file as well. For flexibility reasons, the function is built as a \emph{template}. The prototype of the routine, is displayed in the following:
 
 \begin{lstlisting}
 template <class Model>
@@ -335,12 +343,12 @@ Vector evolve(const Vector &y, double t, double h, const Model &model) const // 
 \end{lstlisting}
 
 Here $y$ represents the approximated solution at the time $t$, with $h$ standing for $\tau$, i.e. the chosen discretisation stepsize.\\
-As pointed out before, in case an implicit RK method is chosen, an implicit equation for $K_i$ has to be solved by means of numerical methods. Newton's method has been used here.\\
+As pointed out before, in case an implicit RK method is chosen, an implicit equation for $\mathbf{K}_i$ has to be solved by means of numerical methods: Newton's method has been used here.\\
 
 INSERIRE LST CON IL NEWTON METHod\\
 
 As it can be seen from the listed code above, the program checks if Eqn.\eqref{eqn:K_i} is an implicit equation for $\mathbf{K}_i$: if the entry $a_{ss}\neq 0$, then Newton's method is implemented.\\
-The variable \emph{tol} represents the tolerance and has been here set to $10^{-6}$: the method stops once the distance (in $L_\infty$ norm) between the RHS and LHS of Eqn.\eqref{eqn:K_i} is smaller than the fixed tolerance or after a given number of iterations (which has been chosen to be equal to $10^6$).\\
+The variable \emph{tol} represents the tolerance and has been here set to $10^{-6}$: the method stops once the distance (in $L_\infty$ norm) between the RHS and LHS of Eqn.\eqref{eqn:K_i} is smaller than the fixed tolerance or after a given number of iterations (which has been chosen to be equal to $10^6$) has been reached.\\
 
 \subsubsection{models.hh file}
 \label{subsubsec:models}
@@ -349,20 +357,19 @@ In this file the class \emph{HeatEquation}, whose elements completely characteri
 INSERIRE LST CON VARIABILI PUBBLICHE \\
 
 The class contains the variables \emph{N}, \emph{kappa} and \emph{A}.\\
-The other elements of \emph{HeatEquation} are the functions $f$, $df$, $T$ and $y_0$. A default constructor, setting the values of the variables of the class has been implemented as well. The implementation of such functions is reported in the following.\\
+A default constructor, setting the values of the variables of the class has been implemented. The other elements of \emph{HeatEquation} are the functions $f$, $df$, $T$ and $y_0$. The implementation of such functions is reported in the following.\\
 
 INSERIRE LST CON FUNZIONI\\
 
-It is worth noticing the function \emph{T} simply returns the total integration time without performing any other task. For the sake of generality and flexibility of the code, its function structure has been preserved: as a matter of fact, such a choice eases the extension of the present code to more general cases.\\
 The comments associated to the functions completely describe each of them, hence no additional description is required.\\
+It is however worth noticing that the function \emph{T} simply returns the total integration time without performing any other task. For the sake of generality and flexibility of the code, its function structure has been preserved: as a matter of fact, such a choice eases the extension of the present code to more general cases.\\
 
 \subsubsection{main.cc file}
-The main file contains the function \emph{solve} which performs the integration of the chosen equation up to time $T$, which is performed by means of repeated calls to \emph{evolve}.\\
+The main file contains the function \emph{solve} which performs the integration of the chosen equation up to time $T$. Such a task is performed by means of repeated calls to \emph{evolve}.\\
 
 LST CON WHILE DI SOLVE\\
 
-As it can be seen, the function returns the solution of the whole integration.\\
-In order to store such a solution in a suitable file, the function \emph{toFile} has to be called.\\
+As it can be seen, the function returns the solution of the whole integration. In order to store such a solution in a suitable file, the function \emph{toFile} has to be called.\\
 
 LST CON CHIAMATA A TOFILE\\
 
@@ -370,7 +377,7 @@ A vector of pointers to DIRK is constructed.\\
 
 LST COSTRUZIONE VETTORE DIRK\\
 
-By accessing a suitable location of this vector through an appropriate choice of the input parameters, each of the RK methods can be employed. An explicit check on the consistency of the inserted parameters in implemented as well:
+By accessing a suitable location of this vector through an appropriate choice of the input parameters, each of the RK methods can be employed. An explicit check on the consistency of the inserted parameters in implemented as well:\\
 
 INSERIRE LISTATO CON ERROR HANDLING\\
 
@@ -378,13 +385,12 @@ In particular, the program checks if $N_x>1$, $k>0$ and if the scheme index has 
 
 \subsection{Running the program}
 The program is run through the Makefile provided.
-The program accepts 3 arguments from the prompt (here the Makefile) and, whenever an incorrect assertion of them happens, exits with an appropriate warning the user.\\
-The current optimisation is set to -Ofast and all following tests have been performed with this optimisation choice. Every possible error or warning has been explicitly checked by means of the instruction \emph{-Wall -Wfatal-errors -pedantic} before proceeding to performing the different tests: no error appeared. Regarding the warnings, they refer to the provided .hh files and none of them is alters the correct behaviour of the code: for these reasons, it has been chosen not to deal with them.\\
+The program accepts 3 arguments (not counting the ``./ " instruction) from the prompt (here the Makefile) and, whenever an incorrect insertion of them happens, the program exits with an appropriate warning the user.\\
+The current optimisation is set to -Ofast and all following tests have been performed with this optimisation choice. Every possible error or warning has been explicitly checked by means of the instruction \emph{-Wall -Wfatal-errors -pedantic} before proceeding to performing the different tests: no error appeared. Regarding the warnings, they refer to the provided .hh files and none of them affects the correctness of the code: for these reasons, it has been chosen not to deal with them.\\
 The program generates a fixed number of output files, in which the results of the tests have been stored. Some of these files are used to produce plots by means of different plotscripts.\\
 
 \subsection{Results of the tests}
-In order to check the correctness of the implementation of the code, the tests requested by the assignment have been performed.\\
-In the following, the results of the more significant tests performed will be reported and briefly discussed.\\
+In order to check the correctness of the implementation of the code, the tests requested by the assignment have been performed. In the following, the results of the more significant tests performed will be reported and briefly discussed.\\
 
 \subsubsection{Choice of temporal stepsize for $N_x=16$}
 Having fixed a moderate spatial resolution, i.e. having fixed $N_x=16$, various temporal stepsize $\tau$ for the numerical integration have been tested. Two different value of \emph{k} have been used in order to investigate the dependence of the aforementioned tests on the thermal diffusivity. The chosen values are $k=1$ and $k=0.001$.\\
