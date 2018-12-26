@@ -11,13 +11,30 @@
 #include "schemes.hh"
 
 template <class Model>
-Vector solve(const Model &model, const DIRK &scheme, double tau)
+Vector solve(const Model &model, const DIRK &scheme, double tau, int schemeNumber)
 {
   Vector y=model.y0();
   double t=0;
-  while ( std::abs(model.T()-t)>tau )
+  while ( model.T()-t >= tau )
   {
-    y = scheme.evolve(y,t,tau,model);
+    if (t == tau)
+    {
+      Vector copy = y;
+      y.push_back(0);
+      y.insert(y.begin(),0);
+      y.toFile("HE_kappa_" + std::to_string(model.kappa) + "_N_" + std::to_string(model.N) + "_scheme_" + std::to_string(schemeNumber) + "_time_0.dat");
+    }
+    for (int n = 1; n < 6; ++n)
+    {
+      if ( std::abs(t - n*(model.T()-tau)/5) <= tau )
+      {
+        Vector copy = y;
+        y.push_back(0);
+        y.insert(y.begin(),0);
+        y.toFile("HE_kappa_" + std::to_string(model.kappa) + "_N_" + std::to_string(model.N) + "_scheme_" + std::to_string(schemeNumber) + "_time_" + std::to_string(n) + ".dat");
+      }
+    }
+    y =  scheme.evolve(y,t,tau,model);
     t += tau;
   }
   std::cout << "Finished time integration at t=" << t << std::endl;
@@ -37,7 +54,7 @@ int main(int argc, char** argv)
     return 1;
   }
   // read parameters as command line arguments
-  int N = atoi(argv[1]); //if a float is inserted the program takes its integerpart as an input
+  int N = atoi(argv[1]); //if a float is inserted the program takes its integer part as an input
   double kappa = atof(argv[2]);
   int schemeNumber = atoi(argv[3]);
 
@@ -48,13 +65,13 @@ int main(int argc, char** argv)
   schemes.push_back(new BE());
   schemes.push_back(new Heun3());
 
-  double tau = 1e-3; //temporal integration step
+  std::vector<double> tau = {1e-4,4e-2,1e-3}; //temporal integration step
 
   // example invocation of solver
-  Vector y=solve(model,*schemes[schemeNumber],tau);
-  y.push_back(0);
-  y.insert(y.begin(), 0);
-  y.toFile("HE_kappa_" + std::to_string(kappa) + "_N_" + std::to_string(N) + "_scheme_" + std::to_string(schemeNumber) + ".dat");
+  Vector y=solve(model,*schemes[schemeNumber],tau[schemeNumber],schemeNumber);
+  // y.push_back(0);
+  // y.insert(y.begin(), 0);
+  // y.toFile("HE_kappa_" + std::to_string(kappa) + "_N_" + std::to_string(N) + "_scheme_" + std::to_string(schemeNumber) + ".dat");
 
   for (const auto& r : (schemes)) //freeing memory
   {

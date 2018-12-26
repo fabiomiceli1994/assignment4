@@ -38,7 +38,6 @@ public:
           {
             A.addEntry(i, j, 1.);
           }
-
         }
       }
     }
@@ -52,6 +51,15 @@ public:
   // df : returns the gradient of f, and since f is vector values, grad f is the Jacobian matrix, which in this case is A
   const SparseMatrix& df(double t,const Vector &y) const
   {
+    // for (int i = 0; i < N; ++i)
+    // {
+    //   for (int j = 0; j < N; ++j)
+    //   {
+    //     std::cout.width(5);
+    //     std::cout << std::left << A(i,j);
+    //   }
+    //   std::cout << std::endl;
+    // }
     return A;
   }
 

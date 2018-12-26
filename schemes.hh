@@ -53,13 +53,16 @@ public:
           int iter = 0; // iter is the counter which will allow us to stop the while loop after a certain number of iterations
                         // if the condition std:::abs(error) < 1e-6 is not met
           double error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]).maxNorm();
+          // std::cout << "Error: " << error << '\n';
           SparseMatrix Jac = model.df(t + h*c_[s], temp_sum + h*a(s,s)*k[s]);
           while (iter < 1e6 && std::abs(error) > 1e-6)
           {
-            k[s] = Jac.ConjugateGradient((-1)*model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s])+k[s], k[s], 1e-6, 1e6) + k[s];
+            // std::cout << "Error: " << error << '\n';
+            k[s] = Jac.ConjugateGradient((-1)*model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) + k[s], k[s], 1e-6, 1e6) + k[s];
             error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]).maxNorm();
             iter++;
           }
+          // std::cout << "Check" << '\n';
           temp_sum += h*a(s,s)*k[s];
 	      }
         k[s] = model.f(t + c_[s]*h, temp_sum);

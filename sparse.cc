@@ -116,7 +116,7 @@ Vector SparseMatrix::ConjugateGradient(const Vector& b, const Vector& x0, double
 	p = r + p*beta;
 	if ( (iter % 10) == 0 ) {
 	  const double resi = r.maxNorm();
-	  //std::cout << "ConjugateGradient: Iteration " << iter << ": residual=" << resi << std::endl;
+	  // std::cout << "ConjugateGradient: Iteration " << iter << ": residual=" << resi << std::endl;
 	  if ( resi < tolerance ) {
 		return x;
 	  }

@@ -393,7 +393,7 @@ The program generates a fixed number of output files, in which the results of th
 In order to check the correctness of the implementation of the code, the tests requested by the assignment have been performed. In the following, the results of the more significant tests performed will be reported and briefly discussed.\\
 
 \subsubsection{Choice of temporal stepsize for $N_x=16$}
-Having fixed a moderate spatial resolution, i.e. having fixed $N_x=16$, various temporal stepsize $\tau$ for the numerical integration have been tested. Two different value of \emph{k} have been used in order to investigate the dependence of the aforementioned tests on the thermal diffusivity. The chosen values are $k=1$ and $k=0.001$.\\
+Having fixed a moderate spatial resolution, i.e. having fixed $N_x=16$, various temporal stepsize $\tau$ for the numerical integration have been tested. Two different value of \emph{k} have been used in order to investigate the dependence of the aforementioned tests on the thermal diffusivity. The chosen values are $k=1$ and $k=0.1$.\\
 It has been shown that the choice of $\tau=10^{-3}$ guarantees the convergence of all the RK methods employed in the integration of Eqn.\ref{def:Heat}. As a matter of fact, the choice of smaller stepsizes, up to $\tau=10^{-6}$, has additionally been seen to work for the $FE$ and $Heun3$ schemes, but not for the $BE$ one, for which the choice of $\tau=10^{-4}$ does not ensure convergence.\\ 
 
 \subsubsection{Comparing solutions over time}
