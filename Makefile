@@ -11,7 +11,8 @@ OBJS=main.o sparse.o vector.o
 PLOTS=HE_plot_FE.pdf HE_plot_Heun3.pdf HE_plot_BE.pdf
 
 # additional variables
-CPPFLAGS=-std=c++11
+# CPPFLAGS=-std=c++11
+CPPFLAGS=-std=c++11 -g
 
 all: $(RESULTS)
 
@@ -32,9 +33,11 @@ $(RESULTS): $(PROGRAM)
 	./$(PROGRAM) 16 1.0 2
 	./$(PROGRAM) 16 0.1 2
 
+#g++ -O1 -Wall -Wfatal-errors -pedantic $(CPPFLAGS) $(OBJS) -o $(PROGRAM)
 $(PROGRAM): $(OBJS)
-	g++ $(CPPFLAGS) $(OBJS) -o $(PROGRAM)
+	g++ -Ofast -Wall -Wfatal-errors -pedantic $(CPPFLAGS) $(OBJS) -o $(PROGRAM)
 
+#g++ -O3 -Wall -Wfatal-errors -pedantic $(CPPFLAGS) -c $^ -o $@
 $(OBJS): %.o: %.cc
 	g++ -Ofast -Wall -Wfatal-errors $(CPPFLAGS) -c $^ -o  $@
 
