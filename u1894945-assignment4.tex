@@ -370,12 +370,16 @@ A vector of pointers to DIRK is constructed.\\
 
 LST COSTRUZIONE VETTORE DIRK\\
 
-By accessing a suitable location of this vector through an appropriate choice of the input parameters, each of the RK methods can be employed.\\
+By accessing a suitable location of this vector through an appropriate choice of the input parameters, each of the RK methods can be employed. An explicit check on the consistency of the inserted parameters in implemented as well:
+
+INSERIRE LISTATO CON ERROR HANDLING\\
+
+In particular, the program checks if $N_x>1$, $k>0$ and if the scheme index has been inserted correctly, i.e. if the scheme index corresponds to a scheme implemented in the code. In the event of a wrong insertion, the program exits with a suitable warning to the user.\\
 
 \subsection{Running the program}
 The program is run through the Makefile provided.
 The program accepts 3 arguments from the prompt (here the Makefile) and, whenever an incorrect assertion of them happens, exits with an appropriate warning the user.\\
-The current optimisation is set to -Ofast and all following tests have been performed with this optimisation choice. Every possible error or warning has been explicitly checked by means of the instruction \emph{-Wall -Wfatal-errors -pedantic} before proceeding to performing the different tests.\\
+The current optimisation is set to -Ofast and all following tests have been performed with this optimisation choice. Every possible error or warning has been explicitly checked by means of the instruction \emph{-Wall -Wfatal-errors -pedantic} before proceeding to performing the different tests: no error appeared. Regarding the warnings, they refer to the provided .hh files and none of them is alters the correct behaviour of the code: for these reasons, it has been chosen not to deal with them.\\
 The program generates a fixed number of output files, in which the results of the tests have been stored. Some of these files are used to produce plots by means of different plotscripts.\\
 
 \subsection{Results of the tests}

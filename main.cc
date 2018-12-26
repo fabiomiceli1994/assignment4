@@ -26,7 +26,7 @@ Vector solve(const Model &model, const DIRK &scheme, double tau)
 
 int main(int argc, char** argv)
 {
-  if ( argc<4 || atoi(argv[1])<3 || atof(argv[2])<0 || ( atoi(argv[3])!=0 && atoi(argv[3])!=1 && atoi(argv[3])!=2 ) )
+  if ( argc<4 || atoi(argv[1])<2 || atof(argv[2])<0 || ( atoi(argv[3])!=0 && atoi(argv[3])!=1 && atoi(argv[3])!=2 ) )
   {
     std::cerr << "Usage: " << std::endl
 			  << "  " << argv[0] << " <Nx> <kappa> <scheme>" << std::endl << std::endl
