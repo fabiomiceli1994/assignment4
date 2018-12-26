@@ -4,5 +4,5 @@ set output "HE_plot_BE.pdf"
 set key reverse Left outside
 set grid
 
-plot "HE_kappa_0.001000_N_16_scheme_1.dat" using 1:2 with l title "kappa = 0.001", \
+plot "HE_kappa_0.100000_N_16_scheme_1.dat" using 1:2 with l title "kappa = 0.01", \
      "HE_kappa_1.000000_N_16_scheme_1.dat" using 1:2 with l title "kappa = 1"

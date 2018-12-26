@@ -64,9 +64,9 @@ public:
   // y0 : initial function at time t = 0
   Vector y0() const
   {
-    double h = 1./((*this).N + 1);
-    Vector v((*this).N);
-    for (int i = 0; i < (*this).N; ++i)
+    double h = 1./(N + 1);
+    Vector v(N);
+    for (int i = 0; i < N; ++i)
     {
       if (i*h > 0.25 && i*h <= 0.75)
       {

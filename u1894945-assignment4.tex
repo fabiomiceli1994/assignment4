@@ -114,13 +114,13 @@ problem in “space-like” directions. In this assignment the approximation of 
 
 \begin{definition}
 	\label{def:IVBP}
-	Let $I\subset\mathbb{R}$ be an interval, $\Omega\subset\mathbb{R^d}$ be a simply connected, bounded domain $t_0\in I$, $\mathcal{L}$ a spatial differential operator of the form $\mathcal{L}=-\Delta+\mathbf{p}\cdot\nabla+q$, for $\mathbf{p}$ and $q$ smooth. The parabolic initial boundary-value problem (IBVP) is to find $u(\mathbf{x},t):\Omega\times I\to\mathbb{R}$ for which:
+	Let $I\subset\mathbb{R}$ be an interval, $\Omega\subset\mathbb{R^d}$ be a simply connected, bounded domain $t_0\in I$, $\mathcal{L}$ a spatial differential operator of the form $\mathcal{L}=-\Delta+\mathbf{p}\cdot\nabla+q$, for $\mathbf{p}$ and $q$ smooth functions. The parabolic initial boundary-value problem (IBVP) is to find $u(\mathbf{x},t):\Omega\times I\to\mathbb{R}$ for which:
 	\begin{align}
 		\label{eqn:IVBP}
 		\begin{cases}
-		\partial_t u+\mathcal{L}u=f\hspace{4mm}\text{for}\hspace{1mm}\mathbf{x}\in\Omega,\hspace{2mm}\forall t\in\ I\\
-		u=v\hspace{4mm}\text{for}\hspace{1mm}\mathbf{x}\in\partial\Omega,\hspace{2mm}\forall t\in I\\
-		u(\mathbf{x},0)=u_0(\mathbf{x})\hspace{4mm}\text{for}\hspace{1mm}\mathbf{x}\in\Omega
+		\partial_t u+\mathcal{L}u=f &\text{for}\hspace{1mm}\mathbf{x}\in\Omega,\hspace{2mm}\forall t\in\ I\\
+		u=v &\text{for}\hspace{1mm}\mathbf{x}\in\partial\Omega,\hspace{2mm}\forall t\in I\\
+		u(\mathbf{x},0)=u_0(\mathbf{x}) &\text{for}\hspace{1mm}\mathbf{x}\in\Omega
 		\end{cases}
 	\end{align} 
 	with data $f(\mathbf{x},t):\Omega\times I\to\mathbb{R}$, $v(\mathbf{x},t):\partial\Omega\times I\to\mathbb{R}$, $u_0(\mathbf{x}):\Omega\to\mathbb{R}$. Eqn.\eqref{eqn:IVBP} is a parabolic partial differential equation (PDE).\\
@@ -140,9 +140,9 @@ The following simple problem represents the benchmark problem for testing numeri
 	\begin{align}
 	\label{eqn:Heat}
 	\begin{cases}
-	\partial_t u - k\partial^2_x u = f\hspace{4mm}\text{for}\hspace{1mm}x\in\Omega,\hspace{2mm}\forall t\in\ I\\
-	u(0, t)=u(1, t)=0\hspace{4mm}\text{for}\hspace{1mm}x\in\partial\Omega,\hspace{2mm}\forall t\in I\\
-	u(x,0)=u_0(x)\hspace{4mm}\text{for}\hspace{1mm}x\in\Omega
+	\partial_t u - k\partial^2_x u = f &\text{for}\hspace{1mm}x\in\Omega,\hspace{2mm}\forall t\in\ I\\
+	u(0, t)=u(1, t)=0 &\text{for}\hspace{1mm}x\in\partial\Omega,\hspace{2mm}\forall t\in I\\
+	u(x,0)=u_0(x) &\text{for}\hspace{1mm}x\in\Omega
 	\end{cases}
 	\end{align} 
 	Eqn.\eqref{eqn:Heat} is called the heat equation. Specifically, $u(x,t)$ 	describes the diffusive transport (of matter or heat) in space, with constant diffusivity/conductivity $k\in\mathbb{R}^+$, and where $f(x,t)$ describes
@@ -151,48 +151,164 @@ The following simple problem represents the benchmark problem for testing numeri
 
 \subsection{Numerical methods to approximate solution to IBVPs}
 Two different approaches to finding numerical solution to IBVPs can be adopted. The first one results in the so-called \emph{semi-discretisation schemes}, in which a generic IBVP is first discretised in space and then in time or viceversa. Alternatively, a simultaneous discretisation, leading to a \emph{fully discretised scheme}, can be performed.\\
-A detailed presentation of \emph{fully-discretised schemes}, which not be covered here, can be found in Ref.\cite{numerical-math}. In the present report it will only be pointed out that, although a fully-discretised approach appears to be more convenient, in the case of stiff problems approximated by means of method characterised by a bounded region of absolute stability, the choice of the discretisation time step and of the mesh size cannot be done arbitrarily, since the meshsize and the time step are related by the Courant-Friedrichs-Levy conditions (see Ref.\cite{numerical-math}).\\
+A detailed presentation of \emph{fully-discretised schemes}, which will not be covered here, can be found in Ref.\cite{numerical-math}. In the present report it will only be pointed out that, although a fully-discretised approach appears to be more convenient, in the case of stiff problems approximated by means of method characterised by a bounded region of absolute stability, the choice of the discretisation time step and of the mesh size cannot be done arbitrarily, since the two are related by the Courant-Friedrichs-Levy conditions (see Ref.\cite{numerical-math}).\\
 
-\subsubsection{Methods of lines}
-In the present assignment only one of two possible approaches to semi-discretistion will be presented. A more general discussion of them can again be found in Ref.\cite{numerical-math} and Ref.\cite{lec-notes}.\\
-In particular, only the so called \emph{method of lines} will be presented.\\
+\subsubsection{Method of lines}
+In the present assignment only one of two possible approaches to semi-discretistion will be presented. A more general discussion of them can again be found in Ref.\cite{numerical-math} and Ref.\cite{lec-notes}. In particular, only the so called \emph{method of lines} will be presented.\\
 
-The method of lines takes the position of first discretising in space. The resulting problem becomes a system of ordinary differential equations. The semidiscretisation generates an IVP for a system of ODEs which may be solved by known methods
-for IVPs. To discretise the spatial derivatives one shall apply the classical central difference
-scheme for the Laplacian operator, with an equidistant spatial grid. Applying this to Eqn.\eqref{def:Heat}, the following system of ODEs is obtained:
+Let $ N_x $ and $ N_t $ denote the number of spatial and temporal discretisation points respectively. Also let $ (x_i)_{i=0}^{N_x + 1} $ be a set of points, that discretise $ \Omega = [0,L] $. One has:
+\begin{align*}
+0 = x_0 < x_1 < \cdots < x_{N_x} < x_{N_x + 1} = L
+\end{align*}
+Define $ I_k := [x_{k},x_{k+1}] $, with $ |I_k| := h $, for $ k = 0,\ldots,N_x $ (h $\in  \mathbb{R}^+$  is the spatial mesh size). Finally, denote by $ u_i : I \to \mathbb{R}$ the approximation of the exact solution $ u $ at $ x_i $ for $ i = 1,\ldots,N_x $.
+\\\\
+We begin the method of lines discertisation by first discretising the spatial direction with second order central finite differences to obtain an initial value problem, that is for $ i = 1,\ldots,N_x $
+
+The method of lines takes the position of first discretising in space. Such a discretisation is here performed through second order central finite differences. In the case of Eqn.\eqref{def:Heat}, the resulting problem becomes a system of ordinary differential equations of the form:
+
+\begin{align*}
+	\frac{du_i}{dt} = \kappa \partial^+\partial^- u_i = \kappa\frac{u_{i+1} - 2u_i + u_{i-1}}{h^2},\hspace{4mm} i\in\lbrace 1,\ldots, N_x\rbrace
+\end{align*}
+
+Such a problem can be equivalently restated in a convenient matrix form. Denoting by $ \mathbf{u} = (u_1,\ldots,u_{N_x}) : I^{N_x} \to \mathbb{R} $, one has:
+
+\begin{align}\label{Eq:IVP from Method of Lines}
+\frac{d\mathbf{u}}{dt} = f(t,\mathbf{u}) = -\frac{\kappa}{h^2}
+\begin{pmatrix}
+2 & -1 & & & & -1\\
+-1 & 2 & -1 & & & \\
+& -1 & 2 & -1 & & \\
+& & \ddots & \ddots & \ddots & \\
+& & & & & -1 \\
+-1 & & & -1 & 2
+\end{pmatrix}
+\mathbf{u} 
+\end{align}
+
+Periodic boundary conditions (PBCs) have been additionally imposed on the problem (see \cite{lec-notes}) as required by the assignment instructions\footnote{In Eqn.\eqref{Eq:IVP from Method of Lines} the blank entries represent zeros of tre matrix, which has size $N_x\times N_x$.}.\\
+Hence, the semidiscretisation generates an IVP for a system of ODEs which may be solved by known methods for IVPs. In this formalism, one has:
 
 
 \begin{align}
 \label{eqn:lines}
 \begin{cases}
-	\frac{du_i}{dt}=\partial^+\partial^-u_i+f_i\hspace{4mm}\forall x_i\in\Omega_h\\
-	u_i=0 \hspace{4mm}\forall x_i\in\Gamma_h
+	\frac{du_i}{dt}=\partial^+\partial^-u_i+f_i &\forall x_i\in\Omega_h\\
+	u_i=0 &\forall x_i\in\Gamma_h
 \end{cases}
 \end{align} 
 
-with initial conditions $u_i(0)=u_0(x_i)$ for $x_i\in\Omega_h$.\\
-The notation is the same used in Assignment 2 and Assignment 3 report, i.e. the notation of Ref.\cite{lec-notes}.\\
-To complete the discretisation a solver for ODEs has to be applied to the system.\\
+with initial conditions $u_i(0)=u_0(x_i)$ for $x_i\in\Omega_h$, $i\in\lbrace 1\ldots N_x\rbrace$. Here $\Omega_h$ represents the set of points in the interior of $\Omega$ and $\Gamma_h$ the set of points on the boundary of $\Omega$, once the spatial discretisation has taken place.\\
+To complete the discretisation a solver for ODEs has to be applied to the system. In order to do so, a time-discretisation needs to be performed. Similarly to what has been previously done for the spatial case, let $ (t_n)_{n = 0}^{N_t + 1} $ denote the discretisation of the temporal space $ I = [0,T] $. Hence:
+
+$$0 = t_0 < t_1 < \cdots < t_{N_t} < t_{N_t + 1} = T$$
+
+where $|J_k| = | [t_{k},t_{k+1}] | := \tau\in\mathbb{R}^+$ is the temporal step size, for $ k = 0,\ldots,N_t $. Moreover, denote by $ \mathbf{u}^{l} $ the approximation of the exact solution of the IVP for $ \mathbf{u} $ at $ t_i $ for $ i = 1,\ldots,N_t $.
 
 \subsection{The present case}
-In the present assignment Eqn.\eqref{def:Heat} for $L=1$ and $T=0.1$ and periodic boundary conditions, will be solved through the system of ODEs \eqref{def:Heat} by means of RK methods. In particular, the forward Euler method, the backward Euler method and the 3-stage Heun method will be used.\\
-As for the initial condition, the following is required:
+In the present assignment Eqn.\eqref{def:Heat} is defined for $L=1$, $T=0.1$, $f\equiv 0$, PBCs and the following initial condition:
 
 \begin{align}
 \label{eqn:init-cond}
 u_0(x)=
-	\begin{cases}
-	0\hspace{4mm}\text{if}\hspace{1mm} x\le\frac{1}{4},\hspace{1mm}x>\frac{3}{4}\\
-	1\hspace{4mm}\text{otherwise}
-	\end{cases}
+\begin{cases}
+0\hspace{4mm}\text{if}\hspace{1mm} x\le\frac{1}{4},\hspace{1mm}x>\frac{3}{4}\\
+1\hspace{4mm}\text{otherwise}
+\end{cases}
 \end{align}
 
-Finally, the datum $f$ is set to $0$.\\
+System of equations \eqref{eqn:lines} will be solved by means of Runge-Kutta (RK) methods.\\
+The implementation of such methods for the present problem will be now discussed. Set $ f(t_i,\mathbf{U}^i) = f_i $. An s-stage RK method for system \eqref{Eq:IVP from Method of Lines} takes the form:
+for the IVP \eqref{Eq:IVP from Method of Lines} is of the form:
+\begin{align*}
+\mathbf{u}^{n+1} = \mathbf{u}^{n} + \tau \mathbf{F}(t_n, \mathbf{u}^n, f, \tau),
+\end{align*}
+where the increment function $ F $ is defined as
+\begin{align*}
+\mathbf{F}(t_n, \mathbf{u}^n, f, \tau) &= \sum_{i=1}^{s}b_i\mathbf{K}_i \\
+\mathbf{K}_i &= f\left(t_n + c_i\tau, \mathbf{u}^n + \tau\sum_{j=1}^{s}a_{ij}\mathbf{K}_j\right), \quad \text{for } i \in \{1,\ldots,s\},
+\end{align*}
+and $ A = (a_{ij}) \in \mathbb{R}^{s \times s} $, $ \mathbf{b}, \mathbf{c} \in \mathbb{R}^s $ completely determine the Runge-Kutta method.\\
+As it is well known, a specific Runge-Kutta method can be denoted by its \emph{Butcher tableau}, which takes the following form:
+\begin{align*}
+\renewcommand\arraystretch{1.2}
+\begin{array}
+{c|c}
+\mathbf{c} &
+A\\
+\hline
+& \mathbf{b}
+\end{array}.
+\end{align*}
+The forward Euler method, the backward Euler method and the 3-stage Heun method will be used in this assignment. Their Butcher tableaus are reported here:
+\begin{center}
+	\begin{minipage}{0.3\linewidth}
+		\begin{align*}
+		\renewcommand\arraystretch{1.2}
+		\textnormal{Forward Euler (FE)} \\
+		\begin{array}
+		{c|c}
+		0 &
+		\\
+		\hline
+		& 1
+		\end{array}
+		\end{align*}
+	\end{minipage}
+	\begin{minipage}{0.3\linewidth}
+		\begin{align*}
+		\renewcommand\arraystretch{1.2}
+		\textnormal{Backward Euler (BE)} \\
+		\begin{array}
+		{c|c}
+		1 & 1
+		\\
+		\hline
+		& 1
+		\end{array}
+		\end{align*}
+	\end{minipage}
+	\begin{minipage}{0.3\linewidth}
+		\begin{align*}
+		\renewcommand\arraystretch{1.2}
+		\textnormal{3-stage Heun (Heun3)} \\
+		\begin{array}
+		{c|ccc}
+		0 & & \\
+		1/3 & 1/3 & \\
+		2/3 & 0 & 2/3 \\
+		\hline
+		& 1/4 & 0 & 3/4
+		\end{array}
+		\end{align*}
+	\end{minipage}
+\end{center}
+
+It should now be clear that the numerical implementation of the code is a combination of the techniques proposed for the previous assignments and, in particular, extends the code used in Assignment 3 to the ``vectorial case".\\
+It is worth pointing out how such an extension takes place in the case of implicit RK methods, i.e RK methods where at each stage $ K_i $, for a specific $ i \leq s $, is determined by solving the implicit equation:
+
+\begin{align}
+\label{eqn:K_i}
+\mathbf{K}_i = f\left(t_n + \tau c_i, \mathbf{u}^n + \tau\sum_{j=1}^{i-1}a_{ij}\mathbf{K}_j + \tau a_{ii}\mathbf{K}_i\right)
+\end{align}
+Thus, at each stage $ i $, one has to solve for $ K_i $ through other means, which in this case coincide with the Newton's method. Using the Newton method, one solves for the root of the function $ g $ given by:
+\begin{align*}
+g(\mathbf{K}_i) := f\left(t_n + \tau c_i, \mathbf{u}^n + \tau\sum_{j=1}^{i-1}a_{ij}\mathbf{K}_j + \tau a_{ii}\mathbf{K}_i\right) - \mathbf{K}_i
+\end{align*}
+$\mathbf{K}_i $, which is the root of $g$, is approximated through the following iterative equation:
+\begin{align*}
+\mathbf{K}_i^{k+1} = \mathbf{K}_i^{k} - (g(\mathbf{K}_{i}^{k}))^{-1}g(\mathbf{K}_{i}^{k}),
+\end{align*}
+$ \mathbf{K}_i^k $ being the $ k $th iteration of the approximation of $ \mathbf{K}_i $. We note that to perform the inversion $ (g(\mathbf{K}_{i}^{k}))^{-1} $ numerical inversion techniques have to be used.\\
+
 
 
 \section{The program}
 \subsection{Implementation}
-The program is built on the classes and struct that can be found in the files \emph{schemes.hh} and \emph{models.hh}, which contain the different RK methods to use and the different benchmark problem to test on, respectively.\\
+The program is built on the classes and struct that can be found in the files \emph{vector.hh}, \emph{vector.cc}, \emph{sparse.hh}, \emph{sparse.cc}, \emph{models.hh} and \emph{schemes.hh}.\\
+In the \emph{vector}-files the class \emph{Vector}, which generalises the \emph{std::vector} class is built. The \emph{SparseMatrix} class construction can be found in the \emph{sparse}-files instead. Being that such files have been provided along with the assignment instructions and that their content was studied for the lessons and for Assignment1 and Assignment 2, no discussion of them will be here reported. However, it is worth pointing out that a slight modification of the function \emph{Vector::toFile}, provided in the \emph{vector}-files has been performed. Such a modification, which is reported for clarity in the following, eases the printing of the solution to the chosen file.\\
+
+AGGIUNGERE LST CON MODIFICA E COMMENTO A TOFILe\\
+
 \subsubsection{schemes.hh file}
 \label{subsubsec:schemes}
 The class DIRK is made of 4 \emph{protected} variables: the matrix $A$, the vector $b$, the vector $c$ and the integer $s$ (named stages$\_$ in the code), which fully characterise the Butcher tableau of any RK method. This is done through the following instructions, which can be found in the schemes.hh file:
@@ -206,359 +322,86 @@ protected:
 \end{lstlisting}
 
 It may be worth pointing out that, even though \emph{a$\_$} represents a matrix, it is implemented as a vector in the program.\\
-The classes $FE$, $BE$, $IM$, $Heun3$ and $DIRK2$ are implemented as derived classes of $DIRK$. Their names stand respectively for: Forward Euler, Backward Euler, Implicit Midpoint, 3-stage Heun and 2-stage DIRK. The Butcher tableau of the methods can be found in the assignment instruction and will not be reported here.\\
+The classes $FE$ (Forward Euler), $BE$ (Backward Euler) and $Heun3$ (3-stage Heun) are implemented as derived classes of $DIRK$.\\
+
+AGGIUNGERE CLASSI IN LST\\
 
 
-The function \emph{evolve}, which returns the evolved approximated solution $u_{n+1}$, $u_n$ being the present approximation, can be found in the file as well. For flexibility reasons, the function is built as a \emph{template}: in this way, both methods can be accessed by the function. The prototype of the routine, is displayed in the following:
-
-\begin{lstlisting}
-double evolve(const double &y,double t,double h,const Model &model,unsigned &count) const //one step forward
-\end{lstlisting}
-
-Here $y$ represents the approximated solution at the time $t$, with $h$ the chosen discretisation stepsize.\\
-In case an implicit RK method is chosen, Eqn.\ref{eqn:Ki} becomes an implicit equations for $K_i$ and has to be solved by means of numerical methods. As required by the assignment instructions, Newton's method has been used.\\
+The function \emph{evolve}, which returns the evolved approximated solution $\mathbf{u}^{n+1}$, i.e. it evolves the solution to time $t+\tau$ from time $t$, can be found in the file as well. For flexibility reasons, the function is built as a \emph{template}: in this way, both methods can be accessed by the function. The prototype of the routine, is displayed in the following:
 
 \begin{lstlisting}
-if( a(i,i)!=0 ) //implementing Newton's method
-{
-	unsigned iter = 0;
-	double error = ( -k[i] + model.f(t + c_[i]*h, tmp_sum + h*a(i,i)*k[i]) );
-	count ++;
-	double den; //den stays for the denumerator of the fraction which updates k[i] in Newton's method
-	while(iter < 1e6 && std::abs(error) > 1e-6 ) //1e6 is maximum number of iterations and 1e-6 is the given tol
-	{
-		den = -1 + model.df( t + c_[i]*h, tmp_sum + k[i] )*h*a(i,i);
-		count++;
-		k[i] -= error/den;
-		error = -k[i] + model.f(t + c_[i]*h, tmp_sum + h*a(i,i)*k[i]) ;
-		count++;
-	iter ++;
-	}
+template <class Model>
+Vector evolve(const Vector &y, double t, double h, const Model &model) const // h  = tau
 \end{lstlisting}
 
-As it can be seen from the listed code above, the program checks if Eqn.\eqref{eqn:Ki} is an implicit equation for $K_i$: if the entry $a_{ii}\neq 0$, then Newton's method is implemented. The error at every iteration, which is equal to $f\left(t+hc_i, u_n+h\sum_{j=1}^{i-1}a_{ij}K_j+ha_{ii}K_i\right)$, where $f$ is the one defined in Eqn.\eqref{eqn:Ki}, is contained in the variable \emph{error} and happens to be equal to the numerator of the fraction \emph{error/den} which updates the value of $K_i$ (\emph{k$\_[i]$} in the code) at every iteration. For this reason, the same variable has been used to both store the error and construct the updating of $K_i$, making the routine more efficient. The initial guess for the solution has always been chosen to be equal to naught.\\
-The variable \emph{tol} represent the tolerance and has been here set to $10^{-6}$: the method stops once the distance (in $L_\infty$ norm) between the RHS and LHS of Eqn.\eqref{eqn:Ki} is smaller than the fixed tolerance or after a fixed number of iterations (which has been chosen to be equal to $10^6$).\\
-Finally, \emph{count} represents the number of evaluations of $f$ and the derivatives of $f$ (see $\S\ref{subsubsec:models}$). Such an evaluation is required by the assignment instructions and allows to perform a basic efficiency analysis of the different methods employed.\\ 
+Here $y$ represents the approximated solution at the time $t$, with $h$ standing for $\tau$, i.e. the chosen discretisation stepsize.\\
+As pointed out before, in case an implicit RK method is chosen, an implicit equation for $K_i$ has to be solved by means of numerical methods. Newton's method has been used here.\\
+
+INSERIRE LST CON IL NEWTON METHod\\
+
+As it can be seen from the listed code above, the program checks if Eqn.\eqref{eqn:K_i} is an implicit equation for $\mathbf{K}_i$: if the entry $a_{ss}\neq 0$, then Newton's method is implemented.\\
+The variable \emph{tol} represents the tolerance and has been here set to $10^{-6}$: the method stops once the distance (in $L_\infty$ norm) between the RHS and LHS of Eqn.\eqref{eqn:K_i} is smaller than the fixed tolerance or after a given number of iterations (which has been chosen to be equal to $10^6$).\\
 
 \subsubsection{models.hh file}
 \label{subsubsec:models}
-In this file a \emph{struct}, whose elements completely characterise the model at hand, is defined.
+In this file the class \emph{HeatEquation}, whose elements completely characterise the model at hand, is defined.
 
-\begin{lstlisting}
-struct Test
-{
-	unsigned modelNumber_;
-\end{lstlisting}
+INSERIRE LST CON VARIABILI PUBBLICHE \\
 
-The stuct contains the variable \emph{modelNumber$\_$}, which allows the user to chosse between different models to test on. Such models are indexed by means of the values $1, 2$ and $3$, with an obvious correspondence with the assignment instructions. The choice of \emph{modelNumber$\_$} 3, is associated with problem \eqref{eqn:test-problem}.\\
-The other elements of \emph{Test} are $f$, $df$, $T$ and $y_0$ and \emph{exact}, which represent the function $f$ defined in each model, its derivative, the total time of integration, the starting point and the exact solution respectively. It should now be clear what the instructions \emph{model.f} and \emph{model.df} listed in $\S$\ref{subsubsec:schemes} stands for: they allow the user to compute $f$ and its first derivative at the given point (which is given as an argument to model).\\
-The choice between the different models is made by means of different \emph{if} instructions. As an example, one of them is reported in the following.\\
+The class contains the variables \emph{N}, \emph{kappa} and \emph{A}.\\
+The other elements of \emph{HeatEquation} are the functions $f$, $df$, $T$ and $y_0$. A default constructor, setting the values of the variables of the class has been implemented as well. The implementation of such functions is reported in the following.\\
 
-\begin{lstlisting}
-double f(double t,const double &y) const
-{
-if(modelNumber_==1) //first assignment equation
-{
-	return (1 - cos(t)*(cos(t) - 1) - y*y);
-}else if(modelNumber_==2) //second assignment equation
-{
-	double l = -0.1;
-	return (1 - cos(t)*(cos(t) - exp(l*t)) - exp(-2*l*t)*y*y + l*y);
-}else if(modelNumber_==3) //test case
-{
-	return -y;
-}else
-{ //exit with an appropriate warning
-	std::cout << "No model defined for this choice of model index. Exiting." << std::endl;
-	exit(EXIT_FAILURE);
-}
-\end{lstlisting}
+INSERIRE LST CON FUNZIONI\\
 
-The above listed code defines the form of the function $f(y,t)$, i.e. the models the user can test on. It is worth pointing out that, in the event of a non correct choice of the model, the program exits with an appropriate error to the user.\\
+It is worth noticing the function \emph{T} simply returns the total integration time without performing any other task. For the sake of generality and flexibility of the code, its function structure has been preserved: as a matter of fact, such a choice eases the extension of the present code to more general cases.\\
+The comments associated to the functions completely describe each of them, hence no additional description is required.\\
 
 \subsubsection{main.cc file}
-The main file contains the function \emph{solve} which performs the integration of the chosen equation up to $T$. The function contains an \emph{if} instruction, which enables the printing of the approximation error over time for two different step sizes, which have been chosen to be $\tau_0=0.1$ and $\tau_0=0.05$, for the first model. The files are named by means of the following instruction:
+The main file contains the function \emph{solve} which performs the integration of the chosen equation up to time $T$, which is performed by means of repeated calls to \emph{evolve}.\\
 
-\begin{lstlisting}
-if( ( tau==0.1 || tau==0.05) && (model.modelNumber_ == 1) )
-{
-	std::ofstream myoutFile;
-	myoutFile.open("Error_Model_" + std::to_string(model.modelNumber_) + "_Scheme_" + std::to_string(schemeNumb) + "_tau_" + std::to_string(tau) + ".dat", std::ios::out);
-\end{lstlisting}
+LST CON WHILE DI SOLVE\\
 
-The integration up to the time T is performed by means of repeated calls to \emph{evolve}.
+As it can be seen, the function returns the solution of the whole integration.\\
+In order to store such a solution in a suitable file, the function \emph{toFile} has to be called.\\
 
-\begin{lstlisting}
-while ( t<=model.T() ) //up to T
-{
-	y =  scheme.evolve(y,t,tau,model, count); //one step
-	t += tau; //increment in time
-	double error = y - model.exact(t); 
-	maxError = std::max(maxError,std::abs(error));
-}
-\end{lstlisting}
+LST CON CHIAMATA A TOFILE\\
 
-In case $\tau_0\neq\lbrace 0.1, 0.05\rbrace$ and the chosen model is not the first one,  the function returns the maximum error in the $L_\infty$ norm between the exact solution and the approximated one over the whole integration time $T$, as the above listed code shows.\\
+A vector of pointers to DIRK is constructed.\\
 
-The program accepts 4 arguments from the prompt (here the Makefile) and, whenever an incorrect assertion of them happens, exits with an appropriate warning the user. A vector of pointers to DIRK is constructed.\\
+LST COSTRUZIONE VETTORE DIRK\\
 
-\begin{lstlisting}
-std::vector<DIRK *> schemes;
-schemes.push_back(new FE());
-schemes.push_back(new BE());
-schemes.push_back(new IM());
-schemes.push_back(new Heun3());
-schemes.push_back(new DIRK2());
-\end{lstlisting}
-
-By accessing a suitable location of this vector, each of the RK methods can be employed. The \emph{experimental order of convergence} (eoc) for each time step is printed on suitable files, named through the following instruction:
-
-\begin{lstlisting}
-std::ofstream myFile;
-myFile.open("EOCS_Model_" + std::to_string(modelNumber) + "_Scheme_" + std::to_string(schemeNumber) + "_tau_" + std::to_string(tau) + "_J_" + std::to_string(level) + ".dat", std::ios::out);
-if(!myFile.good())
-{
-	std::cout << "Failed to open the file." << std::endl;
-	exit(EXIT_FAILURE);
-}
-\end{lstlisting}
-
-As for the previous cases of file-opening instructions, if the program cannot open the file, an appropriate warning message is printed on the terminal. All the files have been made human readable for easing the reading of them by generic users.\\
-Finally, the number of evaluations of $f$ and $df$ (summed over the whole sequence of stepsizes, so that result is independent of the specific stepsize chosen) for each method is printed on the terminal every time the integration is concluded. A suitable message informing the user that the integration has ended is printed as well.\\
+By accessing a suitable location of this vector through an appropriate choice of the input parameters, each of the RK methods can be employed.\\
 
 \subsection{Running the program}
-The program is run through the Makefile provided. The current optimisation is set to -Ofast and all following tests have been performed with this optimisation choice. Every possible error or warning has been explicitly checked by means of the instruction \emph{-Wall -Wfatal-errors -pedantic} before proceeding to performing the different tests: no warnings appeared.\\
-The program generates a fixed number of output files, in which the results of the tests have been stored. Some of these files are used to produce plots by means of four different plotscripts.\\ 
-
-\subsection{Testing correctness}
-In order to check the correctness of the implementation of the code, the tests requested by the assignment have been performed: tests on model 1 and 2 have been performed. Nonetheless, the correctness of the code for the other class of equations is easy to verify by means of changing the parameters in the main file. Such a test, whose results will not be reported here, has been successfully performed in the construction of the code.\\
+The program is run through the Makefile provided.
+The program accepts 3 arguments from the prompt (here the Makefile) and, whenever an incorrect assertion of them happens, exits with an appropriate warning the user.\\
+The current optimisation is set to -Ofast and all following tests have been performed with this optimisation choice. Every possible error or warning has been explicitly checked by means of the instruction \emph{-Wall -Wfatal-errors -pedantic} before proceeding to performing the different tests.\\
+The program generates a fixed number of output files, in which the results of the tests have been stored. Some of these files are used to produce plots by means of different plotscripts.\\
 
 \subsection{Results of the tests}
+In order to check the correctness of the implementation of the code, the tests requested by the assignment have been performed.\\
 In the following, the results of the more significant tests performed will be reported and briefly discussed.\\
 
-\subsubsection{Experimental errors of convergence}
-The experimental error of convergence for each combination of models, schemes and stepsizes\footnote{In the following, the stepsizes will be denoted both with $h$, in accordance to the above theoretical sections, and with $\tau$, in accordance with the assignment instuctions.}, has been computed. As shown in the previous section, each scheme is indexed though the number of the location it occupies in the vector of pointers to DIRK. In particular, $0$ is associated with FE, $1$ is associated with BE, $2$ is associated with BE, $3$ is associated with IM, $4$ is associated with Heun3 and $5$ is associated with DIRK2.\\
+\subsubsection{Choice of temporal stepsize for $N_x=16$}
+Having fixed a moderate spatial resolution, i.e. having fixed $N_x=16$, various temporal stepsize $\tau$ for the numerical integration have been tested. Two different value of \emph{k} have been used in order to investigate the dependence of the aforementioned tests on the thermal diffusivity. The chosen values are $k=1$ and $k=0.001$.\\
+It has been shown that the choice of $\tau=10^{-3}$ guarantees the convergence of all the RK methods employed in the integration of Eqn.\ref{def:Heat}. As a matter of fact, the choice of smaller stepsizes, up to $\tau=10^{-6}$, has additionally been seen to work for the $FE$ and $Heun3$ schemes, but not for the $BE$ one, for which the choice of $\tau=10^{-4}$ does not ensure convergence.\\ 
 
+\subsubsection{Comparing solutions over time}
+As required by the assignment instructions, two different sets of values for $k$, $\tau$ and $N_x$ have been chosen in order to compare the respective solutions after one time step and after 5 different equispaced points in time later on.\\
+The following choice has been made:
 
- The results are contained in the ``Errors" files, whose content is reported in the following:
+\begin{align}
+	\label{eqn:set-1}
+	k_1=, \quad\tau_1=, \quad N_{x_1}=
+\end{align}
 
+\begin{align}
+\label{eqn:set-2}
+k_2=, \quad\tau_2=, \quad N_{x_2}=
+\end{align} 
 
-\begin{lstlisting}
-#EOCS for scheme 0, relative to model 1
-#1-tau                   2-Maximum Error          3-EOCS                   
-0.1                      0.126438                 	
-0.05                     0.035277                 1.84163
-0.025                    0.00949667               1.89323
-0.0125                   0.00304776               1.63967
-0.00625                  0.00152847               0.995661
-0.003125                 0.000765525              0.997569
-0.0015625                0.000383107              0.9987
-0.00078125               0.000191643              0.999326
-0.000390625              9.58445e-05              0.999656
-0.000195313              4.7928e-05               0.999826
-9.76563e-05              2.39654e-05              0.999913
-4.88281e-05              1.19831e-05              0.999956
-2.44141e-05              5.99164e-06              0.999978
-\end{lstlisting}
+\subsubsection{Computational performance}
 
-\begin{lstlisting}
-#EOCS for scheme 0, relative to model 2
-#1-tau                   2-Maximum Error          3-EOCS                   
-0.1                      inf                      	
-0.05                     inf                      -nan
-0.025                    inf                      -nan
-0.0125                   inf                      -nan
-0.00625                  0.481524                 inf
-0.003125                 0.132811                 1.85823
-0.0015625                0.057307                 1.2126
-0.00078125               0.0269536                1.08823
-0.000390625              0.013101                 1.0408
-0.000195313              0.0064618                1.01967
-9.76563e-05              0.00320933               1.00967
-4.88281e-05              0.00159934               1.00479
-2.44141e-05              0.000798349              1.00239
-\end{lstlisting}
-
-Regarding the FE method, it is clear that the order of convergence of the method is one. This is in perfect agreement with the theoretical predictions. As a matter of fact, Thm.\ref{thm:order-cond-RK} guarantees that the order of consistency of the method is one: being that the method is zero-stable, its order of convergence has to be at least equal to the order of consistency.\\
-It is worth pointing out that the method appears to be non-stable (in the sense of zero stability) for time steps which are bigger than $0.00625$. This is again in perfect agreement with Def.\ref{def:zero-stability-one-step}, which defines stability for times steps smaller or equal of a fixed $h_0$: the results suggest that $h_0$ for model $2$ and the FE method is smaller than $0.0125$.\\
-
-For the BE scheme, one has:
-
-\begin{lstlisting}
-#EOCS for scheme 1, relative to model 1
-#1-tau                   2-Maximum Error          3-EOCS                   
-0.1                      0.39611                  	
-0.05                     0.055257                 2.84167
-0.025                    0.0117679                2.2313
-0.0125                   0.00310423               1.92255
-0.00625                  0.00154073               1.01062
-0.003125                 0.000768528              1.00345
-0.0015625                0.000383855              1.00154
-0.00078125               0.00019183               1.00073
-0.000390625              9.58911e-05              1.00036
-0.000195313              4.79397e-05              1.00018
-9.76563e-05              2.39684e-05              1.00009
-4.88281e-05              1.19838e-05              1.00004
-2.44141e-05              5.99181e-06              1.00002
-\end{lstlisting}
-
-\begin{lstlisting}
-#EOCS for scheme 1, relative to model 2
-#1-tau                   2-Maximum Error          3-EOCS                   
-0.1                      0.639798                 	
-0.05                     0.495569                 0.368531
-0.025                    0.358309                 0.467881
-0.0125                   0.239848                 0.579083
-0.00625                  0.148207                 0.694511
-0.003125                 0.0851809                0.79901
-0.0015625                0.0462974                0.8796
-0.00078125               0.0242502                0.93293
-0.000390625              0.0124282                0.964386
-0.000195313              0.00629377               0.981617
-9.76563e-05              0.00316733               0.990657
-4.88281e-05              0.00158885               0.995288
-2.44141e-05              0.000795727              0.997634
-\end{lstlisting}
-
-For the same reasons of the previous case, one can argue that the order of convergence is one and that such a result is in agreement with what one expects theoretically.\\
-
-In the case of the BE method, Thm.\ref{thm:order-cond-RK} guarantees that its order of consistency is 2 ($ bc=0.5$, $b=1$). Again, making use of its stability, one finds the experimental data to be in agreement with the theoretical predictions.\\
-
-\begin{lstlisting}
-#EOCS for scheme 2, relative to model 1
-#1-tau                   2-Maximum Error          3-EOCS                   
-0.1                      0.0585369                	
-0.05                     0.0151887                1.94635
-0.025                    0.00383395               1.9861
-0.0125                   0.00096082               1.99649
-0.00625                  0.000240347              1.99915
-0.003125                 6.00952e-05              1.9998
-0.0015625                1.50244e-05              1.99995
-0.00078125               3.75613e-06              1.99999
-0.000390625              9.39042e-07              1.99999
-0.000195313              2.3469e-07               2.00044
-9.76563e-05              5.86338e-08              2.00095
-4.88281e-05              1.49431e-08              1.97226
-2.44141e-05              3.88959e-09              1.94179
-\end{lstlisting}
-
-\begin{lstlisting}
-#EOCS for scheme 2, relative to model 2
-#1-tau                   2-Maximum Error          3-EOCS                   
-0.1                      0.209799                 	
-0.05                     0.072592                 1.53112
-0.025                    0.0203654                1.83369
-0.0125                   0.00526223               1.95237
-0.00625                  0.00132671               1.98782
-0.003125                 0.000332426              1.99675
-0.0015625                8.31018e-05              2.00008
-0.00078125               2.07828e-05              1.99949
-0.000390625              5.19649e-06              1.99978
-0.000195313              1.29881e-06              2.00035
-9.76563e-05              3.24474e-07              2.00101
-4.88281e-05              8.2711e-08               1.97195
-2.44141e-05              2.16242e-08              1.93543
-\end{lstlisting}
-
-Regarding the Heun3 scheme, following the same line of reasoning of the previous cases, it is possible to argue that, in agreement with the theoretical predictions, the order of consistency is equal to 3.\\
-
-\begin{lstlisting}
-#EOCS for scheme 3, relative to model 1
-#1-tau                   2-Maximum Error          3-EOCS                   
-0.1                      0.000312788              	
-0.05                     1.96209e-05              3.99473
-0.025                    1.22761e-06              3.99847
-0.0125                   8.95918e-08              3.77634
-0.00625                  1.10018e-08              3.02563
-0.003125                 1.36331e-09              3.01255
-0.0015625                1.69549e-10              3.00733
-0.00078125               2.2073e-11               2.94135
-0.000390625              1.39465e-11              0.662379
-0.000195313              6.74928e-11              -2.27483
-9.76563e-05              5.50014e-11              0.295266
-4.88281e-05              2.70395e-10              -2.29753
-2.44141e-05              2.21423e-10              0.288268
-\end{lstlisting}
-
-\begin{lstlisting}
-#EOCS for scheme 3, relative to model 2
-#1-tau                   2-Maximum Error          3-EOCS                   
-0.1                      0.00208592               	
-0.05                     6.50329e-05              5.00337
-0.025                    4.32878e-06              3.90914
-0.0125                   1.31976e-06              1.71369
-0.00625                  2.13607e-07              2.62724
-0.003125                 2.97629e-08              2.84337
-0.0015625                3.9283e-09               2.92154
-0.00078125               4.06131e-10              3.27389
-0.000390625              1.98413e-11              4.35537
-0.000195313              3.85861e-10              -4.28151
-9.76563e-05              3.31035e-10              0.221099
-4.88281e-05              1.50893e-09              -2.18847
-2.44141e-05              1.31991e-09              0.193087
-\end{lstlisting}
-
-It is worth noticing that the eoc either gets close to zero or becomes negative for small enough step sizes: this behaviour is somewhat expected and signals a saturation of the method performances with the reduction of the step size. \\
-
-Finally, the results for the DIRK2 method are presented.\\
-
-\begin{lstlisting}
-#EOCS for scheme 3, relative to model 1
-#1-tau                   2-Maximum Error          3-EOCS                   
-0.1                      0.000312788              	
-0.05                     1.96209e-05              3.99473
-0.025                    1.22761e-06              3.99847
-0.0125                   8.95918e-08              3.77634
-0.00625                  1.10018e-08              3.02563
-0.003125                 1.36331e-09              3.01255
-0.0015625                1.69549e-10              3.00733
-0.00078125               2.2073e-11               2.94135
-0.000390625              1.39465e-11              0.662379
-0.000195313              6.74928e-11              -2.27483
-9.76563e-05              5.50014e-11              0.295266
-4.88281e-05              2.70395e-10              -2.29753
-2.44141e-05              2.21423e-10              0.288268
-\end{lstlisting}
-
-\begin{lstlisting}
-#EOCS for scheme 3, relative to model 2
-#1-tau                   2-Maximum Error          3-EOCS                   
-#1-tau                   2-Maximum Error          3-EOCS                   
-0.1                      0.00280051               	
-0.05                     0.000764064              1.87393
-0.025                    0.000154804              2.30325
-0.0125                   2.26948e-05              2.77001
-0.00625                  3.21506e-06              2.81945
-0.003125                 4.45826e-07              2.85029
-0.0015625                1.01866e-07              2.1298
-0.00078125               1.11012e-08              3.19789
-0.000390625              1.31348e-09              3.07925
-0.000195313              5.51304e-10              1.25248
-9.76563e-05              3.51625e-10              0.648811
-4.88281e-05              1.50797e-09              -2.1005
-2.44141e-05              1.32134e-09              0.190605
-\end{lstlisting}
-
-Once again, making use of Thm.\ref{thm:order-cond-RK} and Thm.\ref{thm:zero-stability}, one has that the order of convergence has to be at least two. Being that maximum errors are closer to the ones of the Heun3 method, the order of convergence is expected to be 3, in agreement with theoretical predictions.\\
-
-In order to have a simpler visualisation of the dependence of the maximum approximation error on the time step, the following plots have been produced. By means of plotting the theoretical profiles $\tau$, $\tau^2$ and $\tau^3$ on the same plots, a direct confirmation of the previous results can be obtained.\\
-
-
-
-
-
-The plots confirm what has been previously stated through Thm.\ref{thm:zero-stability} and Thm.\ref{thm:order-cond-RK}. As a matter of fact, the good agreement between the $\tau$ and the profiles obtained for the FE and BE methods is clearly observable in Fig.\ref{fig:Err_M1} and Fig.\ref{fig:Err_M2}. It is also clear that the convergence error of the IM method is equal to 2. Moreover, the plots confirm what has been said above about the order of convergence of the DIRK2 method: its profile appears to be in good agreement with the theoretical profile $\tau^3$ and with the Heun3 one. The aforementioned saturation of the performances of the DIRK2 and Heun3 method for small step sizes is clearly observable in both plots.\\
-
-\subsubsection{Approximation error over time}
-The approximation error, computed in the $L_\infty$ norm, has been studied as a function of the integration time for model 1 for two different step sizes, i.e. $h=0.1$ and $h=0.05$. The results are reported in the two following plots:
-
-
-
-Similar curves are observed in the plots. As expected, the error tends to grow with time, even if, for specific time intervals, a decreasing profile is present.\\
-
-\subsubsection{Efficiency of the methods}
-A basic analysis of the performance of each of the methods is performed by means computing the number of times $f$ and $df$ are computed for each method. The results are output on the terminal so that a generic user can easily verify them.\\
-Unsurprisingly, the most performant method is the FE method. This can be understood by noticing that the method is an explicit one-stage method: usage of Newton's method is not required by the time evolution and the total number of evaluations of $f$ and $df$ is the minimum possible since no loops over $s$, $s$ being the number of stages of the method, is performed.\\
 
 \section{Conclusive remarks}
 In this section some additional comments and observation are presented.

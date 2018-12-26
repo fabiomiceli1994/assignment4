@@ -1,19 +1,19 @@
 # input files
 TEX=report.tex
-PLOTSCRIPTS=plotscript1.gpl
+PLOTSCRIPTS=plotscript1.gpl plotscript2.gpl plotscript3.gpl
 
 # generated files
 REPORT=report.pdf
 REPORTExtra=report.aux report.log report.synctex.gz report.toc
-RESULTS = out.dat $(wildcard *.dat) HE_kappa_1.000000_N_16_scheme_0.dat HE_kappa_0.001000_N_16_scheme_0.dat HE_kappa_1.000000_N_16_scheme_2.dat HE_kappa_0.001000_N_16_scheme_2.dat
+RESULTS = out.dat $(wildcard *.dat) HE_kappa_1.000000_N_16_scheme_0.dat HE_kappa_0.100000_N_16_scheme_0.dat HE_kappa_1.000000_N_16_scheme_2.dat HE_kappa_0.100000_N_16_scheme_2.dat HE_kappa_1.000000_N_16_scheme_1.dat HE_kappa_0.100000_N_16_scheme_1.dat
 PROGRAM=myProgram
 OBJS=main.o sparse.o vector.o
-PLOTS=HE_plot_FE.pdf HE_plot_Heun3.pdf
+PLOTS=HE_plot_FE.pdf HE_plot_Heun3.pdf HE_plot_BE.pdf
 
 # additional variables
 CPPFLAGS=-std=c++11
 
-all: $(REPORT)
+all: $(RESULTS)
 
 $(REPORT): $(PLOTS) $(TEX)
 		pdflatex -interaction=batchmode report.tex
@@ -21,15 +21,16 @@ $(REPORT): $(PLOTS) $(TEX)
 
 $(PLOTS): $(RESULTS) $(PLOTSCRIPTS)
 	gnuplot plotscript1.gpl
+	gnuplot plotscript2.gpl
 	gnuplot plotscript3.gpl
 
 $(RESULTS): $(PROGRAM)
 	./$(PROGRAM) 16 1.0 0
-	./$(PROGRAM) 16 0.001 0
-	# ./$(PROGRAM) 16 1.0 1
-	# ./$(PROGRAM) 16 0.001 1
+	./$(PROGRAM) 16 0.1 0
+	./$(PROGRAM) 16 1.0 1
+	./$(PROGRAM) 16 0.1 1
 	./$(PROGRAM) 16 1.0 2
-	./$(PROGRAM) 16 0.001 2
+	./$(PROGRAM) 16 0.1 2
 
 $(PROGRAM): $(OBJS)
 	g++ $(CPPFLAGS) $(OBJS) -o $(PROGRAM)

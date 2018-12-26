@@ -56,7 +56,7 @@ public:
           SparseMatrix Jac = model.df(t + h*c_[s], temp_sum + h*a(s,s)*k[s]);
           while (iter < 1e6 && std::abs(error) > 1e-6)
           {
-            k[s] = Jac.GaussSeidel((-1)*model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]), k[s], 1e-6, 1e6) + k[s];
+            k[s] = Jac.ConjugateGradient((-1)*model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s])+k[s], k[s], 1e-6, 1e6) + k[s];
             error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]).maxNorm();
             iter++;
           }

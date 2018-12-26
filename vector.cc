@@ -84,7 +84,7 @@ void Vector::toFile(const std::string& filename, double L) {
   file.open(filename);
   for ( int i = 0; i<size(); ++i ) {
   file.width(20);
-	file << std::left << ((double) i)/size()*L << " " << (*this)[i] << std::endl;
+	file << std::left << ((double) i)/(size()-1)*L << " " << (*this)[i] << std::endl; //-1 is added to the provided to make it print the PBC in an easy way
   }
   file.close();
 }
