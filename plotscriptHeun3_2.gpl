@@ -13,4 +13,4 @@ set yrange [0:1.01]
 set key reverse Left outside
 set grid
 
-plot for [i=0:5] "HE_k_".k."_N_".N_x."_tau_".tau."_scheme_2_t_".i.".dat" using 1:2 with l title "n=".i
+plot for [i=0:5] "HE_k_".k."_N_".N_x."_tau_".tau."_scheme_2_t_".i.".dat" using 1:2 with l title "t_".i
