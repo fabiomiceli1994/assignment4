@@ -21,14 +21,19 @@ Vector solve(const Model &model, const DIRK &scheme, double tau, int schemeNumbe
   while ( model.T()-t >= tau )
   {
     y =  scheme.evolve(y,t,tau,model,count);
+    t += tau;
     if (y.maxNorm()>1 || (clock() - timeStart) / CLOCKS_PER_SEC >= 10) // time in seconds. Tarhget wallclock fixed as required
     {
+      for(unsigned int m=0; m<6; ++m)
+      {
+        Vector dummy(model.N+2, 0.9);
+        dummy.toFile("HE_k_" + std::to_string(model.kappa) + "_N_" + std::to_string(model.N) + "_tau_" + std::to_string(tau) + "_scheme_" + std::to_string(schemeNumber) + "_t_" + std::to_string(m) + ".dat");
+      }
       std::cout << "Scheme " + std::to_string(schemeNumber) + " is unstable for N=" + std::to_string(model.N) + ", kappa=" + std::to_string(model.kappa) + ", tau=" + std::to_string(tau) << std::endl;
       break;
     }
     else
     {
-      t += tau;
       if (t == tau)
       {
         y.push_back(0);

@@ -29,7 +29,7 @@ $(PLOTS): $(RESULTS) $(PLOTSCRIPTS)
 	gnuplot plotscriptHeun3_2.gpl
 
 $(RESULTS): $(PROGRAM)
-	./$(PROGRAM) 20 1.0 0 0.001
+	./$(PROGRAM) 25 1.0 0 0.001
 	./$(PROGRAM) 16 0.1 0 0.001
 	./$(PROGRAM) 20 1.0 1 0.001
 	./$(PROGRAM) 16 0.1 1 0.001
