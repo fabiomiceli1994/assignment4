@@ -3,7 +3,10 @@ N_x = "20"
 tau = "0.001000"
 
 set terminal pdf
-set output "HE_plot_N_".N_x."_tau_".tau."_k_".k."_evolve_BE.pdf"
+set output "HE_plot_N_".N_x."_tau_".tau."_k_".k."_BE.pdf"
+set xlabel "x"
+set ylabel "u(x,t)"
+set title "Time evolution of solution for BE scheme (N_x=".N_x.", {/Symbol t}=".tau.", {/Symbol k}=".k.")"
 
 set key reverse Left outside
 set grid
