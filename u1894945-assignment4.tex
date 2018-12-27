@@ -283,17 +283,17 @@ It is worth pointing out how such an extension takes place in the case of implic
 
 \begin{align}
 \label{eqn:K_i}
-\mathbf{K}_i = f\left(t_n + \tau c_i, \mathbf{u}^n + \tau\sum_{j=1}^{i-1}a_{ij}\mathbf{K}_j + \tau a_{ii}\mathbf{K}_i\right)
+\mathbf{K}_i = \mathbf{f}\left(t_n + \tau c_i, \mathbf{u}^n + \tau\sum_{j=1}^{i-1}a_{ij}\mathbf{K}_j + \tau a_{ii}\mathbf{K}_i\right)
 \end{align}
-Thus, at each stage $ i $, one has to solve for $ K_i $ through other means, which in this case coincide with the Newton's method. Using the Newton method, one solves for the root of the function $ g $ given by:
+Thus, at each stage $ i $, one has to solve for $ K_i $ through other means, which in this case coincide with the Newton's method. Using the Newton method, one solves for the root of the function $ \mathbf{g} $ given by:
 \begin{align*}
-g(\mathbf{K}_i) := f\left(t_n + \tau c_i, \mathbf{u}^n + \tau\sum_{j=1}^{i-1}a_{ij}\mathbf{K}_j + \tau a_{ii}\mathbf{K}_i\right) - \mathbf{K}_i
+\mathbf{g}(\mathbf{K}_i) := \mathbf{f}\left(t_n + \tau c_i, \mathbf{u}^n + \tau\sum_{j=1}^{i-1}a_{ij}\mathbf{K}_j + \tau a_{ii}\mathbf{K}_i\right) - \mathbf{K}_i
 \end{align*}
 $\mathbf{K}_i $, which is the root of $g$, is approximated through the following iterative equation:
 \begin{align*}
-\mathbf{K}_i^{k+1} = \mathbf{K}_i^{k} - (g(\mathbf{K}_{i}^{k}))^{-1}g(\mathbf{K}_{i}^{k}),
+\mathbf{K}_i^{k+1} = \mathbf{K}_i^{k} - (J_\mathbf{g}(\mathbf{K}_{i}^{k}))^{-1}\mathbf{g}(\mathbf{K}_{i}^{k}),
 \end{align*}
-$ \mathbf{K}_i^k $ being the $ k $th iteration of the approximation of $ \mathbf{K}_i $. We note that to perform the inversion of $ (g(\mathbf{K}_{i}^{k}))^{-1} $, numerical inversion techniques have to be used.\\
+$ \mathbf{K}_i^k $ being the $ k $th iteration of the approximation of $ \mathbf{K}_i $ and $J_\mathbf{g}(\mathbf{K}_{i}^{k})$ is the Jacobian of $\mathbf{g}$ at the point $\mathbf{K}_i$. We note that to perform the inversion of $(J_\mathbf{g}(\mathbf{K}_{i}^{k})) $, iterative methods have to be used.\\
 
 
 

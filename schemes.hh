@@ -36,7 +36,7 @@ public:
   // - model.df(t,y)
   // - model.N
   template <class Model>
-  Vector evolve(const Vector &y, double t, double h, const Model &model) const // h  = tau here
+  Vector evolve(const Vector &y, double t, double h, const Model &model, unsigned int &count ) const // h  = tau
   {
     Vector ret = y;
     std::vector<Vector> k(stages_, Vector(model.N));
@@ -50,22 +50,23 @@ public:
         }
 	      if (a(s,s) != 0)
         {
-          int iter = 0; // iter is the counter which will allow us to stop the while loop after a certain number of iterations
-                        // if the condition std:::abs(error) < 1e-6 is not met
-          double error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]).maxNorm();
-          // std::cout << "Error: " << error << '\n';
+          int iter = 0; // iter is the counter to stop the while loop after a certain number of iterations
+          Vector error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]);
+          count ++;
           SparseMatrix Jac = model.df(t + h*c_[s], temp_sum + h*a(s,s)*k[s]);
-          while (iter < 1e6 && std::abs(error) > 1e-6)
+          count ++;
+          while (iter < 1e6 && error.maxNorm() > 1e-6)
           {
-            // std::cout << "Error: " << error << '\n';
             k[s] = Jac.ConjugateGradient((-1)*model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) + k[s], k[s], 1e-6, 1e6) + k[s];
-            error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]).maxNorm();
+            count ++;
+            error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]);
+            count ++;
             iter++;
           }
-          // std::cout << "Check" << '\n';
           temp_sum += h*a(s,s)*k[s];
 	      }
         k[s] = model.f(t + c_[s]*h, temp_sum);
+        count ++;
 	      // Increment the return value by the current k[s]
 	      ret += h*b_[s]*k[s];
 	    }
@@ -82,7 +83,7 @@ protected:
   std::vector<double> a_,b_,c_;
 };
 
-// FE: derivied class for the forward Euler method
+// forward Euler method
 class FE: public DIRK
 {
 public:
@@ -96,7 +97,7 @@ public:
 
 };
 
-// BE: derived class for the backward Euler method
+// backward Euler method
 class BE: public DIRK
 {
 public:
@@ -110,7 +111,7 @@ public:
 
 };
 
-// Heun3: derived class for the Heun3 method
+// Heun3 method
 class Heun3: public DIRK
 {
 public:

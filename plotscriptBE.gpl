@@ -1,0 +1,11 @@
+k = "1.000000"
+N_x = "20"
+tau = "0.001000"
+
+set terminal pdf
+set output "HE_plot_N_".N_x."_tau_".tau."_k_".k."_evolve_BE.pdf"
+
+set key reverse Left outside
+set grid
+
+plot for [i=0:5] "HE_k_".k."_N_".N_x."_tau_".tau."_scheme_1_t_".i.".dat" using 1:2 with l title "n=".i
