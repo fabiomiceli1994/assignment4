@@ -170,7 +170,7 @@ The method of lines takes the position of first discretising in space. Such a di
 Such a problem can be equivalently restated in a convenient matrix form. Denoting by $ \mathbf{u} = (u_1,\ldots,u_{N_x}) : I^{N_x} \to \mathbb{R} $, one has:
 
 \begin{align}\label{Eq:IVP from Method of Lines}
-\frac{d\mathbf{u}}{dt} = f(t,\mathbf{u}) = -\frac{\kappa}{h^2}
+\frac{d\mathbf{u}}{dt} = \mathbf{f}(t,\mathbf{u}) = -\frac{\kappa}{h^2}
 \begin{pmatrix}
 2 & -1 & & & & -1\\
 -1 & 2 & -1 & & & \\
@@ -279,13 +279,13 @@ The forward Euler method, the backward Euler method and the 3-stage Heun method 
 \end{center}
 
 It should now be clear that the numerical implementation of the code is a combination of the techniques proposed for the previous assignments and, in particular, extends the code used in Assignment 3 to a ``vectorial case".\\
-It is worth pointing out how such an extension takes place in the case of implicit RK methods, i.e RK methods where at each stage $ K_i $, for a specific $ i \leq s $, $s\in\mathbb{N}$ is determined by solving the implicit equation:
+It is worth pointing out how such an extension takes place in the case of implicit RK methods, i.e RK methods where at each stage $\mathbf{K}_i $, for a specific $ i \leq s $, $s\in\mathbb{N}$ is determined by solving the implicit equation:
 
 \begin{align}
 \label{eqn:K_i}
 \mathbf{K}_i = \mathbf{f}\left(t_n + \tau c_i, \mathbf{u}^n + \tau\sum_{j=1}^{i-1}a_{ij}\mathbf{K}_j + \tau a_{ii}\mathbf{K}_i\right)
 \end{align}
-Thus, at each stage $ i $, one has to solve for $ K_i $ through other means, which in this case coincide with the Newton's method. Using the Newton method, one solves for the root of the function $ \mathbf{g} $ given by:
+Thus, at each stage $ i $, one has to solve for $ \mathbf{K}_i $ through other means, which in this case coincide with the Newton's method. Using the Newton method, one solves for the root of the function $ \mathbf{g} $ given by:
 \begin{align*}
 \mathbf{g}(\mathbf{K}_i) := \mathbf{f}\left(t_n + \tau c_i, \mathbf{u}^n + \tau\sum_{j=1}^{i-1}a_{ij}\mathbf{K}_j + \tau a_{ii}\mathbf{K}_i\right) - \mathbf{K}_i
 \end{align*}
@@ -302,7 +302,10 @@ $ \mathbf{K}_i^k $ being the $ k $th iteration of the approximation of $ \mathbf
 The program is built on the classes and struct that can be found in the files \emph{vector.hh}, \emph{vector.cc}, \emph{sparse.hh}, \emph{sparse.cc}, \emph{models.hh} and \emph{schemes.hh}.\\
 In the \emph{vector}-files the class \emph{Vector}, which generalises the \emph{std::vector} class is built. The \emph{SparseMatrix} class construction can be found in the \emph{sparse}-files instead. Being that such files have been provided along with the assignment instructions and that their content was studied for the lessons and for Assignment 1 and Assignment 2, no discussion of them will be here reported. However, it is worth pointing out that a slight modification of the function \emph{Vector::toFile}, provided in the \emph{vector}-files has been performed. Such a modification, which is reported for clarity in the following, eases the printing of the solution to the chosen file.\\
 
-AGGIUNGERE LST CON MODIFICA E COMMENTO A TOFILe\\
+\begin{lstlisting}
+file << std::left << ((double) i)/(size()-1)*L << " " << (*this)[i] << std::endl; // -1 is added to the provided code to make it print correctly
+\end{lstlisting}
+
 
 Also, in order to reduce the amount of lines printed on the terminal, one line has been commented out from the \emph{ConjugateGradient} function contained in \emph{sparse.cc}. For clarity reasons, such a line is explicitly reported in this report.\\
 
@@ -315,7 +318,6 @@ if ( (iter % 100) == 0 ) {
 	}
 }
 \end{lstlisting}
-
 
 \subsubsection{schemes.hh file}
 \label{subsubsec:schemes}
@@ -332,8 +334,52 @@ protected:
 It may be worth pointing out that, even though \emph{a$\_$} represents a matrix, such a variable is implemented as a vector in the program.\\
 The classes $FE$ (Forward Euler), $BE$ (Backward Euler) and $Heun3$ (3-stage Heun) are implemented as derived classes of $DIRK$.\\
 
-AGGIUNGERE CLASSI IN LST\\
+\begin{lstlisting}
+// forward Euler method
+class FE: public DIRK
+{
+	public:
+	
+	FE() : DIRK(1)
+	{
+		a(0,0) = 0.;
+		b_[0] = 1.;
+		c_[0] = 0.;
+	}
+	
+};
 
+// backward Euler method
+class BE: public DIRK
+{
+	public:
+	
+	BE() : DIRK(1)
+	{
+		a(0,0) = 1.;
+		b_[0] = 1.;
+		c_[0] = 1.;
+	}
+	
+};
+
+// Heun3 method
+class Heun3: public DIRK
+{
+	public:
+	
+	Heun3() : DIRK(3)
+	{
+		a(1,0) = 1./3;
+		a(2,1) = 2./3;
+		b_[0] = 0.25;
+		b_[1] = 0.;
+		b_[2] = 0.75;
+		c_[0] = 0;
+		c_[1] = 1./3;
+		c_[2] = 2./3;
+	}
+\end{lstlisting}
 
 The function \emph{evolve}, which returns the evolved approximated solution $\mathbf{u}^{n+1}$ starting from $\mathbf{u}^n$, i.e. it evolves the solution to time $t+\tau$ from time $t$, can be found in the file as well. For flexibility reasons, the function is built as a \emph{template}. The prototype of the routine, is displayed in the following:
 
@@ -345,43 +391,135 @@ Vector evolve(const Vector &y, double t, double h, const Model &model) const // 
 Here $y$ represents the approximated solution at the time $t$, with $h$ standing for $\tau$, i.e. the chosen discretisation stepsize.\\
 As pointed out before, in case an implicit RK method is chosen, an implicit equation for $\mathbf{K}_i$ has to be solved by means of numerical methods: Newton's method has been used here.\\
 
-INSERIRE LST CON IL NEWTON METHod\\
+\begin{lstlisting}
+if (a(s,s) != 0)
+{
+	int iter = 0; // iter is the counter to stop the while loop after a certain number of iterations
+	Vector error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]);
+	count ++; //efficiecy count
+	SparseMatrix Jac = model.df(t + h*c_[s], temp_sum + h*a(s,s)*k[s]); //jacobian (see models.hh)
+	count ++; //efficiency count
+	while (iter < 1e6 && error.maxNorm() > 1e-6)
+	{
+		k[s] = Jac.ConjugateGradient((-1)*model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) + k[s], k[s], 1e-6, 1e6) + k[s];
+		count ++; //efficiency count
+		error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]);
+		count ++; //efficiency count
+		iter++;
+	}
+\end{lstlisting}
 
-As it can be seen from the listed code above, the program checks if Eqn.\eqref{eqn:K_i} is an implicit equation for $\mathbf{K}_i$: if the entry $a_{ss}\neq 0$, then Newton's method is implemented.\\
+As it can be seen from the listed code above, the program checks if Eqn.\eqref{eqn:K_i} is an implicit equation for $\mathbf{K}_i$: if the entry $a_{ss}\neq 0$, then Newton's method is implemented. Inversion of the Jacobian matrix is performed by means of \emph{ConjugateGradient} alogorithm, which has been proven to be faster the \emph{GaussSeidel} one in several cases.\\
 The variable \emph{tol} represents the tolerance and has been here set to $10^{-6}$: the method stops once the distance (in $L_\infty$ norm) between the RHS and LHS of Eqn.\eqref{eqn:K_i} is smaller than the fixed tolerance or after a given number of iterations (which has been chosen to be equal to $10^6$) has been reached.\\
 
 \subsubsection{models.hh file}
 \label{subsubsec:models}
-In this file the class \emph{HeatEquation}, whose elements completely characterise the model at hand, is defined.
-
-INSERIRE LST CON VARIABILI PUBBLICHE \\
-
+In this file the class \emph{HeatEquation}, whose elements completely characterise the model at hand, is defined. 
 The class contains the variables \emph{N}, \emph{kappa} and \emph{A}.\\
-A default constructor, setting the values of the variables of the class has been implemented. The other elements of \emph{HeatEquation} are the functions $f$, $df$, $T$ and $y_0$. The implementation of such functions is reported in the following.\\
 
-INSERIRE LST CON FUNZIONI\\
+
+\begin{lstlisting}
+	int N; // N denotes the number of spatial discretisation points
+	double kappa; // kappa is the thermal diffusivity parameter
+	SparseMatrix A; // A is the matrix in the matrix IVP
+\end{lstlisting}
+
+A default constructor, setting the values of the variables of the class has been implemented. The other elements of \emph{HeatEquation} are the functions $f$, $df$, $T$ and $y_0$. The prototypes of such functions is reported in the following.\\
+
+\begin{lstlisting}
+HeatEquation(int N_, double kappa_) // Default Constructor
+: N(N_), kappa(kappa_), A(SparseMatrix(N))
+{
+	double h = 1./(double)(N + 1);  // Spatial stepsize h
+	double UD = kappa/(h*h); // Upper diagonal terms of A
+	double D = -2*kappa/(h*h);  // Diagonal terms of A
+	double LD = kappa/(h*h); // Lower diagonal terms of A
+	for (int i = 0; i < N; ++i)
+	{
+		for	(int j = 0; j < N; ++j)
+		{
+			if(j == i + 1) // Upper-diagonal entries
+			{
+				A.addEntry(i, j, UD);
+			}
+			else if(j == i) // Diagonal entries
+			{
+				A.addEntry(i, j, D);
+			}
+			else if (j == i - 1) // Lower-diagonal entries
+			{
+				A.addEntry(i, j, LD);
+			}
+		}
+	}
+}
+
+// returns f(t,y) in the IVP obtained for method of lines
+Vector f(double t,const Vector &y) const
+{
+	return A*y;
+}
+
+// returns the gradient of f, which is the Jacobian matrix. Here is just A
+const SparseMatrix& df(double t,const Vector &y) const
+{
+	return A;
+}
+
+// returns the interval length in time
+double T() const
+{
+	return 0.1;
+}
+
+// y0 is the initial function at time t = 0
+Vector y0() const
+{
+	double h = 1./(N + 1);
+	Vector v(N);
+	for (int i = 0; i < N; ++i)
+	{
+		if (i*h > 0.25 && i*h <= 0.75)
+		{
+			v[i] = 1;
+		}
+	}
+	return v;
+}
+\end{lstlisting}
 
 The comments associated to the functions completely describe each of them, hence no additional description is required.\\
 It is however worth noticing that the function \emph{T} simply returns the total integration time without performing any other task. For the sake of generality and flexibility of the code, its function structure has been preserved: as a matter of fact, such a choice eases the extension of the present code to more general cases.\\
 
 \subsubsection{main.cc file}
 The main file contains the function \emph{solve} which performs the integration of the chosen equation up to time $T$. Such a task is performed by means of repeated calls to \emph{evolve}.\\
-
-LST CON WHILE DI SOLVE\\
-
 As it can be seen, the function returns the solution of the whole integration. In order to store such a solution in a suitable file, the function \emph{toFile} has to be called.\\
-
-LST CON CHIAMATA A TOFILE\\
-
 A vector of pointers to DIRK is constructed.\\
 
-LST COSTRUZIONE VETTORE DIRK\\
+\begin{lstlisting}
+	std::vector<DIRK *> schemes; // Vector of schemes
+	schemes.push_back(new FE());
+	schemes.push_back(new BE());
+	schemes.push_back(new Heun3());
+\end{lstlisting}
 
 By accessing a suitable location of this vector through an appropriate choice of the input parameters, each of the RK methods can be employed. An explicit check on the consistency of the inserted parameters in implemented as well:\\
 
-INSERIRE LISTATO CON ERROR HANDLING\\
+\begin{lstlisting}
+	if ( argc<5 || atoi(argv[1])<1 || atof(argv[2])<0 || ( atoi(argv[3])!=0 && atoi(argv[3])!=1 && atoi(argv[3])!=2 ) || atof(argv[4])<=0 )
+	{
+		std::cerr << "Usage: " << std::endl
+		<< "  " << argv[0] << " <Nx> <kappa> <scheme> <tau>" << std::endl << std::endl
+		<< "where" << std::endl
+		<< "  <Nx>       spatial resolution (int) -- required to be >2 " << std::endl
+		<< "  <kappa>    diffusivity (double) -- only takes positive values" << std::endl
+		<< "  <scheme>   scheme index (int) -- FE=0, BE=1, Heun3=2" << std::endl
+		<< "  <tau>      temporal time step (double) -- only takes positive values" << std::endl;
+	return 1;
+	}
+\end{lstlisting}
 
-In particular, the program checks if $N_x>1$, $k>0$ and if the scheme index has been inserted correctly, i.e. if the scheme index corresponds to a scheme implemented in the code. In the event of a wrong insertion, the program exits with a suitable warning to the user.\\
+In particular, the program checks if $N_x>1$, $k>0$, $tau>0$ and if the scheme index has been inserted correctly, i.e. if the scheme index corresponds to a scheme implemented in the code. In the event of a wrong insertion, the program exits with a suitable warning to the user.\\
 
 \subsection{Running the program}
 The program is run through the Makefile provided.
@@ -390,28 +528,150 @@ The current optimisation is set to -Ofast and all following tests have been perf
 The program generates a fixed number of output files, in which the results of the tests have been stored. Some of these files are used to produce plots by means of different plotscripts.\\
 
 \subsection{Results of the tests}
-In order to check the correctness of the implementation of the code, the tests requested by the assignment have been performed. In the following, the results of the more significant tests performed will be reported and briefly discussed.\\
+In order to check the correctness of the implementation of the code, the tests requested by the assignment have been performed. In the present assignment, the following choice for the values of $k$ to test on has been made:
+$$k_1=1.0, \quad k_2=0.1$$\\
+In what follows, the results of the more significant tests performed will be reported and briefly discussed.\\
+
 
 \subsubsection{Choice of temporal stepsize for $N_x=16$}
-Having fixed a moderate spatial resolution, i.e. having fixed $N_x=16$, various temporal stepsize $\tau$ for the numerical integration have been tested. Two different value of \emph{k} have been used in order to investigate the dependence of the aforementioned tests on the thermal diffusivity. The chosen values are $k=1$ and $k=0.1$.\\
-It has been shown that the choice of $\tau=10^{-3}$ guarantees the convergence of all the RK methods employed in the integration of Eqn.\ref{def:Heat}. As a matter of fact, the choice of smaller stepsizes, up to $\tau=10^{-6}$, has additionally been seen to work for the $FE$ and $Heun3$ schemes, but not for the $BE$ one, for which the choice of $\tau=10^{-4}$ does not ensure convergence.\\ 
+Having fixed two values of $k$ ($k_1$ and $k_2$ respectively) and a moderate spatial resolution ($N_x=16$), various temporal stepsize $\tau$ for the numerical integration have been tested. In the following, we will refer to ``unstable scheme" with the meaning of a scheme producing an inconsistent solution to Eqn.\eqref{eqn:Heat}, i.e a solution growing indefinetely in time (see also $\S$\ref{subsubsec:efficiency}).\\ 
+The obtained results will be now presented:
+\begin{itemize}
+	\label{itemize}
+	\item FE scheme: the scheme has been shown to be unstable for $\tau=0.1$ for both values of $k$. In case the choice of $\tau=0.01$ is made, the aforementioned unstable behaviour is observed only in the case of $k=1.0$. For values of $\tau\le0.001$, the scheme has been shown to be stable for both $k_1$ and $k_2$.
+	\item BE scheme: the scheme has been shown to be stable for $\tau\le0.1$. However, in the case of $k=1.0$ and $\tau=0.01$, the conjugate gradient method is not able to reach tolerance after $1000000$ iterations and the program exits. Further analyses on this particular case may be conducted by means of making the fixed number of iteration the user is willing to wait bigger than $10^6$. 
+	\item Heun3 scheme: the exact same results of the FE method have been observed.
+\end{itemize}
+
+It has also been shown that the choice of $\tau=10^{-3}$ guarantees the convergence of all the RK methods employed in the integration of Eqn.\ref{def:Heat}. Such a result is reproduced by default by the program and can be seen explicitly without altering any parameters in the Makefile provided.\\
+As a matter of fact, the choice of smaller stepsizes, up to $\tau=10^{-6}$, has additionally been seen to work for the $FE$ and $Heun3$ schemes. Finally, the choice of $\tau=10^{-4}$ has been shown to work for BE scheme and $k=1.0$.\\ 
 
 \subsubsection{Comparing solutions over time}
-As required by the assignment instructions, two different sets of values for $k$, $\tau$ and $N_x$ have been chosen in order to compare the respective solutions after one time step and after 5 different equispaced points in time later on.\\
-The following choice has been made:
+As required by the assignment instructions, two different sets of values for $k$, $\tau$ and $N_x$ have been chosen in order to compare the respective solutions after one time step and after 5 different equispaced points in time later on. The following choice has been made:
 
 \begin{align}
 	\label{eqn:set-1}
-	k_1=, \quad\tau_1=, \quad N_{x_1}=
+	k_1=1.0, \quad\tau_1=0.001, \quad N_{x_1}=20
 \end{align}
 
 \begin{align}
 \label{eqn:set-2}
-k_2=, \quad\tau_2=, \quad N_{x_2}=
-\end{align} 
+k_2=0.1, \quad\tau_2=0.001, \quad N_{x_2}=16
+\end{align}
 
-\subsubsection{Computational performance}
-16 
+
+Such a choice ensures a fast convergence of all the methods used in the assignment, hence the easy reproducibility of the test performed by a generic user.\\
+Plots for the different set of parameters will be reported in the following. Being that the produced plot are 2D, different colours have been chosen to draw the profile of the approximated solutions at different times. Each colour is associated with a specific time value, where, for convenience reason, the sampling associated with the first time step is denoted by $t_0$. Every other $t_i$, $i\in\lbrace 1,\ldots, 5\rbrace$, is associated with a sampling at time $\frac{iT}{5}$, as required in the assignment instructions.\\
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics{{HE_plot_N_16_tau_0.001000_k_0.100000_FE}.pdf}
+	\end{center}
+	\caption{Graphical representation of the evolution over time of the approximated solution to Eqn.\eqref{eqn:Heat}. The associated parameters are reported in the title of the plot.
+		\label{fig:FE_2}}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics{{HE_plot_N_16_tau_0.001000_k_0.100000_BE}.pdf}
+	\end{center}
+	\caption{Graphical representation of the evolution over time of the approximated solution to Eqn.\eqref{eqn:Heat}. The associated parameters are reported in the title of the plot. 
+		\label{fig:BE_2}}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics{{HE_plot_N_16_tau_0.001000_k_0.100000_Heun3}.pdf}
+	\end{center}
+	\caption{Graphical representation of the evolution over time of the approximated solution to Eqn.\eqref{eqn:Heat}. The associated parameters are reported in the title of the plot. 
+		\label{fig:Heun3_2}}
+\end{figure}
+
+For the set of parameters \eqref{eqn:set-1} the solution obtained with FE scheme, BE scheme and Heun3 scheme appear to be similar to each other. This is somewhat expected since the test has been conducted on a set of value of $k$, $\tau$ and $N_x$ which guarantees stability of all the used methods.\\
+Solution are also consistent with what one would expect when solving the heat equation analytically: the observed profiles are the approximation of the mollification of the initial condition \eqref{eqn:init-cond}. A small variation of the solution profile over time is indeed expected due to the small value of $k$, which plays the role of an inverse ``characteristic time".\\
+
+Regarding set of parameters \eqref{eqn:set-2}, one finds:
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics{{HE_plot_N_20_tau_0.001000_k_1.000000_FE}.pdf}
+	\end{center}
+	\caption{Graphical representation of the evolution over time of the approximated solution to Eqn.\eqref{eqn:Heat}. The associated parameters are reported in the title of the plot. 
+		\label{fig:FE}}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics{{HE_plot_N_20_tau_0.001000_k_1.000000_BE}.pdf}
+	\end{center}
+	\caption{Graphical representation of the evolution over time of the approximated solution to Eqn.\eqref{eqn:Heat}. The associated parameters are reported in the title of the plot.  
+		\label{fig:BE}}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics{{HE_plot_N_20_tau_0.001000_k_1.000000_Heun3}.pdf}
+	\end{center}
+	\caption{Graphical representation of the evolution over time of the approximated solution to Eqn.\eqref{eqn:Heat}. The associated parameters are reported in the title of the plot.  
+		\label{fig:Heun3}}
+\end{figure}
+
+As for the previous case, solutions look very similar to each other: this provides an indirect proof of the correctness of the integration performed. However, it may be worth noticing that, even though solutions appear very close to each other for $t\ge t_1$, slightly different curves are observed in the case of $\tau_0$: the profiles associated with the Heun3 and BE methods are smoother than the FE method counterpart.\\
+Differently for the prior case, however, the profile changes quite significantly with time. Once again, the reason of such a behaviour is related to the value of $k$, which happens to be one order of magnitude greater than in the previous set of parameters. Interpreting $k$ as the inverse of a characteristic time, a faster relaxation of the solution is expected. In this sense, a dominance of one of the slower eigenmode of the solution is observable in the previous plots.\\ 
+
+
+
+\subsubsection{Efficiency analysis}
+\label{subsubsec:efficiency}
+Efficiency of the different methods has been analysed with a technique implemented for the previous assignment. The computational cost of each solution is evaluated in terms of calls to functions $f$ and $df$ contained in \emph{models.hh}. The results of such tests, which are directly printed on the terminal, are reported in the following:
+
+
+\begin{lstlisting}
+---------------------------------------------------------------------------------------------------------------------
+---------------------------------------------- EFFICIENCY ------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+--------------------------------------------- FE ---------------------------------------------------------------------
+./myProgram 16 1.0 0 0.001
+Finished time integration at t=0.099
+
+Number of calls to f and df in scheme 0 is 99
+./myProgram 25 1.0 0 0.001
+Scheme 0 blows up for N=25, kappa=1.000000, tau=0.001000
+Finished time integration at t=0.002
+Number of calls to f and df in scheme 0 is 2
+--------------------------------------------- BE ---------------------------------------------------------------------
+./myProgram 16 1.0 1 0.001
+Finished time integration at t=0.099
+Number of calls to f and df in scheme 1 is 476013
+./myProgram 25 1.0 1 0.001
+Finished time integration at t=0.099
+Number of calls to f and df in scheme 1 is 516483
+--------------------------------------------- Heun3 ------------------------------------------------------------------
+./myProgram 16 1.0 2 0.001
+Finished time integration at t=0.099
+Number of calls to f and df in scheme 2 is 297
+./myProgram 25 1.0 2 0.001
+Scheme 2 blows up for N=25, kappa=1.000000, tau=0.001000
+Finished time integration at t=0.001
+Number of calls to f and df in scheme 2 is 3
+\end{lstlisting}
+
+The listed ``code" above clearly shows the efficiency and stability performance of the different methods. It is clear that, measuring computational cost as described above, the FE method appears to be the most efficient of the method used in this assignment.\\
+However, the above analysis shows that both the FE and the Heun3 method generate an inconsistent solution for $N=25$, $k=1.0$, $\tau=0.001$, while the BE method provides the correct solution for such a choice of parameters.\\
+The relevant trade off in numerical integration of Eqn.\eqref{eqn:Heat} is thus given by the choice of an explicit or an implicit method. As a matter of fact, if on the one hand an explicit method (like the FE one) guarantees a very short computational cost, on the other, an implicit method (like the BE one) guarantees a good behaviour of the solution, in case the given problem experiences Courant-Friedrichs-Levy's condition type of behaviour. The usage of implicit methods is strongly advised when dealing with similar problems (see \cite{lec-notes}, \cite{numerical-math}).\\
+The ``solution-blow-up" analysis just described has been performed as suggested in the assignment instructions, i.e. by means of setting a target wallclock of $10$ seconds and looking at which solution experiences a blow up within that amount of time. Such a target wallclock has been implemented through the following instructions:
+
+\begin{lstlisting}
+double timeStart = clock(); //this is for initialising the target wallclock
+if (y.maxNorm()>1 || (clock() - timeStart) / CLOCKS_PER_SEC >= 10) // time in seconds. Tarhget wallclock fixed as required
+{
+	std::cout << "Scheme " + std::to_string(schemeNumber) + " blows up for N=" + std::to_string(model.N) + ", kappa=" + std::to_string(model.kappa) + ", tau=" + std::to_string(tau) << std::endl;
+	break;
+}
+\end{lstlisting}
+
+
+
 
 \section{Conclusive remarks}
 In this section some additional comments and observation are presented.

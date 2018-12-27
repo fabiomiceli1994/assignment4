@@ -1,5 +1,5 @@
 k = "1.000000"
-N_x = "25"
+N_x = "20"
 tau = "0.001000"
 
 set terminal pdf

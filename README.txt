@@ -32,4 +32,4 @@ the case of a blow-up of the solution to the given equation: it has been chosen
 to plot a constant line of height 0.9 in this case. Finally, in the plots,
 the legend t_0 refers to a sampling of the solution at time tau, tau being the
 temporal stepsize, whereas t_i, i in {1, 2, 3, 4, 5} refers to the sampling of
-teh solution ot times iT/5, T being the total integration time.
+the solution ot times iT/5, T being the total integration time.

@@ -43,7 +43,7 @@ public:
 	   for (int s=0; s<stages_; ++s )
      {
 	      // compute k_s and store inside k[s]
-        Vector temp_sum = y;
+        Vector temp_sum = y; //I use this sum for updating the k[i] values.
         for (int j = 0; j < s; ++j)
         {
           temp_sum += h*a(s,j)*k[j];
@@ -52,15 +52,15 @@ public:
         {
           int iter = 0; // iter is the counter to stop the while loop after a certain number of iterations
           Vector error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]);
-          count ++;
-          SparseMatrix Jac = model.df(t + h*c_[s], temp_sum + h*a(s,s)*k[s]);
-          count ++;
+          count ++; //efficiecy count
+          SparseMatrix Jac = model.df(t + h*c_[s], temp_sum + h*a(s,s)*k[s]); //jacobian (see models.hh)
+          count ++; //efficiency count
           while (iter < 1e6 && error.maxNorm() > 1e-6)
           {
             k[s] = Jac.ConjugateGradient((-1)*model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) + k[s], k[s], 1e-6, 1e6) + k[s];
-            count ++;
+            count ++; //efficiency count
             error = (model.f(t + h*c_[s], temp_sum + h*a(s,s)*k[s]) - k[s]);
-            count ++;
+            count ++; //efficiency count
             iter++;
           }
           temp_sum += h*a(s,s)*k[s];

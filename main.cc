@@ -16,7 +16,7 @@ Vector solve(const Model &model, const DIRK &scheme, double tau, int schemeNumbe
 {
   int n=1; // needed for the printing
   double timeStart = clock(); //this is for initialising the target wallclock
-  Vector y=model.y0();
+  Vector y=model.y0(); //starting the integration
   double t=0;
   while ( model.T()-t >= tau )
   {
@@ -29,25 +29,25 @@ Vector solve(const Model &model, const DIRK &scheme, double tau, int schemeNumbe
         Vector dummy(model.N+2, 0.9);
         dummy.toFile("HE_k_" + std::to_string(model.kappa) + "_N_" + std::to_string(model.N) + "_tau_" + std::to_string(tau) + "_scheme_" + std::to_string(schemeNumber) + "_t_" + std::to_string(m) + ".dat");
       }
-      std::cout << "Scheme " + std::to_string(schemeNumber) + " is unstable for N=" + std::to_string(model.N) + ", kappa=" + std::to_string(model.kappa) + ", tau=" + std::to_string(tau) << std::endl;
+      std::cout << "Scheme " + std::to_string(schemeNumber) + " blows up for N=" + std::to_string(model.N) + ", kappa=" + std::to_string(model.kappa) + ", tau=" + std::to_string(tau) << std::endl;
       break;
     }
     else
     {
-      if (t == tau)
+      if (t == tau) //sampling solution at t = tau
       {
-        y.push_back(0);
+        y.push_back(0); //adding the boundary conditions for the printing
         y.insert(y.begin(),0);
         y.toFile("HE_k_" + std::to_string(model.kappa) + "_N_" + std::to_string(model.N) + "_tau_" + std::to_string(tau) + "_scheme_" + std::to_string(schemeNumber) + "_t_0.dat");
         y.erase(y.begin()+model.N+1);
-        y.erase(y.begin());
+        y.erase(y.begin()); //removing the boundary conditions for restarting the integration
       }
-      else if(std::abs(t - n*model.T()/5) <= tau)
+      else if(std::abs(t - n*model.T()/5) <= tau) // sampling solution to t=nt/5
       {
-        y.push_back(0);
+        y.push_back(0); //adding the boundary conditions
         y.insert(y.begin(),0);
         y.toFile("HE_k_" + std::to_string(model.kappa) + "_N_" + std::to_string(model.N) + "_tau_" + std::to_string(tau) + "_scheme_" + std::to_string(schemeNumber) + "_t_" + std::to_string(n) + ".dat");
-        y.erase(y.begin()+model.N+1);
+        y.erase(y.begin()+model.N+1); //getting rid of the boundary conditions to start integration again
         y.erase(y.begin());
         n++;
       }
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
   // read parameters as command line arguments
   int N = atoi(argv[1]); //if a float is inserted the program takes its integer part as an input
   double kappa = atof(argv[2]);
-  int schemeNumber = atoi(argv[3]);
+  int schemeNumber = atoi(argv[3]); //if a float is inserted the program takes its integer part as an input
   double tau = atof(argv[4]);
 
   HeatEquation model(N, kappa);
